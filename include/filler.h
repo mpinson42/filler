@@ -9,6 +9,13 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+typedef struct s_env
+{
+	int *y;
+	int *x;
+	int taille;
+}				t_env;
+
 
 
 #endif
