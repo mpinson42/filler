@@ -13,19 +13,21 @@ char **ft_get_plateau(char *str, int fd)
 	int i;
 
 	i = 8;
-	ft_putstr_fd("non", fd);
+//	ft_putstr_fd("non", fd);
 	str = ft_strstr(str, "Plateau ");
 	x = ft_atoi(&str[8]);
 	while(ft_isdigit(str[i]))
 		i++;
 	y = ft_atoi(&str[i]);
-	map = (char **)malloc(sizeof(char *) * (x + 1));
+	if(!(map = (char **)malloc(sizeof(char *) * (x + 1))))
+		return(NULL);
 	map[x + 1] = NULL;
 	i = 0;
 
 	while(map[i])
 	{
-		map[i] = (char *)malloc(sizeof(char) * (y + 1));
+		if(!(map[i] = (char *)malloc(sizeof(char) * (y + 1))))
+			return(NULL);
 		ft_bzero(map[i], y + 1);
 		i++;
 	}
@@ -41,7 +43,7 @@ char **ft_get_plateau(char *str, int fd)
 }
 
 
-void ft_get_piece(t_env *e, char *str, int fd)
+int ft_get_piece(t_env *e, char *str, int fd)
 {
 	int i;
 	int y;
@@ -62,11 +64,11 @@ void ft_get_piece(t_env *e, char *str, int fd)
 		i++;
 	segond = ft_atoi(&str[i]);
 
-	ft_putstr_fd("\nchifffffffre\n", fd);
+/*	ft_putstr_fd("\nchifffffffre\n", fd);
 	ft_putstr_fd("first = ", fd);
 	ft_putstr_fd(ft_itoa(first), fd);
 	ft_putstr_fd("segond = ", fd);
-	ft_putstr_fd(ft_itoa(segond), fd);
+	ft_putstr_fd(ft_itoa(segond), fd);*/
 
 	i = 0;
 	while(str[i] && str[i] != '.' && str[i] != '*')
@@ -80,8 +82,10 @@ void ft_get_piece(t_env *e, char *str, int fd)
 		i++;
 	}
 	count = count - 1;
-	e->x = (int *)malloc(sizeof(int) * (count));
-	e->y = (int *)malloc(sizeof(int) * (count));
+	if(!(e->x = (int *)malloc(sizeof(int) * (count))))
+		return(-1);
+	if(!(e->y = (int *)malloc(sizeof(int) * (count))))
+		return(-1);
 	tmp = ft_strsplit(str, '\n');
 
 	i = 0;
@@ -110,8 +114,8 @@ void ft_get_piece(t_env *e, char *str, int fd)
 	}
 	e->taille = count;
 
-
-	ft_putstr_fd("----------------------\n", fd);
+/*
+	ft_putstr_fd("\n----------------------\n", fd);
 	i = 0;
 	while(i < count)
 	{
@@ -127,9 +131,9 @@ void ft_get_piece(t_env *e, char *str, int fd)
 		ft_putstr_fd(" ", fd);
 		i++;
 	}
-	ft_putstr_fd("\n----------------------\n", fd);
+	ft_putstr_fd("\n----------------------\n", fd);*/
 
-
+	return(0);
 }
 
 int main(int argv, char **argc)
@@ -144,30 +148,27 @@ int main(int argv, char **argc)
 	system("rm test");
 	system("touch test");
 	fd = open("./test", O_RDWR);
-	str = (char *)malloc(sizeof(char) * 8096);
+	if(!(str = (char *)malloc(sizeof(char) * 8096)))
+		return(-1);
 //	ft_putstr("11 13\n");
 	while(1)
 	{
-		
-	//	ft_bzero(str, 8096);
+		ft_memset(str, 0, 8096);
 		lol = 0;
 		while(lol < 9999999)
 			lol++;
-		read(0, str, 8095);
-		plateau = ft_get_plateau(str, fd);
-		ft_get_piece(&e, str, fd);
+		if(read(0, str, 8095) == -1)
+			return(0);
+		if(!(plateau = ft_get_plateau(str, fd)))
+			return(0);
+		if(ft_get_piece(&e, str, fd) == -1)
+			return(0);
 
-		ft_putstr_fd(str, fd);
-		ft_putstr_fd("\n\n\n\n\n\n\n", fd);
+//		ft_putstr_fd(str, fd);
+//		ft_putstr_fd("\n\n\n\n\n\n\n", fd);
 
-
-			if(ft_check(plateau, &e, fd) == 0)
-				return(0);
-
-
-	//	ft_putstr("12 12\n");
-	//	free(str);
-		i++;
+		if(ft_check(plateau, &e, fd) == 0)
+			return(0);
 	}
 
 
