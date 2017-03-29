@@ -13,9 +13,11 @@ typedef struct s_env
 {
 	int *y;
 	int *x;
+	int co_1erx;
+	int co_1ery;
 	int taille;
 }				t_env;
 
-
+int ft_check(char **plateau, t_env *e, int fd);
 
 #endif
