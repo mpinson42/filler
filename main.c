@@ -133,7 +133,7 @@ int ft_get_piece(t_env *e, char *str, int fd)
 	e->taille = count;
 
 
-	ft_putstr_fd("\n----------------------\n", fd);
+/*	ft_putstr_fd("\n----------------------\n", fd);
 	i = 0;
 	while(i < count)
 	{
@@ -149,7 +149,7 @@ int ft_get_piece(t_env *e, char *str, int fd)
 		ft_putstr_fd(" ", fd);
 		i++;
 	}
-	ft_putstr_fd("\n----------------------\n", fd);
+	ft_putstr_fd("\n----------------------\n", fd);*/
 
 	return(0);
 }
@@ -168,22 +168,23 @@ int main(int argv, char **argc)
 	fd = open("./test", O_RDWR);
 	if(!(str = (char *)malloc(sizeof(char) * 8096)))
 		return(-1);
-//	ft_putstr("11 13\n");
 	while(1)
 	{
 		plateau = NULL;
 		ft_memset(str, 0, 8096);
 		lol = 0;
-		while(lol < 9999999)
+
+		while(lol < 33333333)
 			lol++;
 		if(read(0, str, 8095) == -1)
 			return(0);
 		if(!(plateau = ft_get_plateau(str, fd)))
 			return(0);
+		ft_putstr_fd("11 13\n", fd);
 		if(ft_get_piece(&e, str, fd) == -1)
 			return(0);
 
-
+		ft_putstr_fd("11 13\n", fd);
 
 
 		ft_putstr_fd(str, fd);

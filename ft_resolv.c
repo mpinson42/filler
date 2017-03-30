@@ -32,7 +32,7 @@ int ft_check_place(char **plateau, t_env *e, int fd, int x, int y)
 		count++;
 	if(plateau[x][y] != '.' && plateau[x][y] != 'X' && plateau[x][y] != 'x')
 		return(-1);
-	ft_putstr_fd(ft_itoa(e->x[i]), fd);
+//	ft_putstr_fd(ft_itoa(e->x[i]), fd);
 	while(i < e->taille)
 	{
 //		ft_putstr_fd("\nppppppppppppppppppppppppp\n", fd);
@@ -48,14 +48,14 @@ int ft_check_place(char **plateau, t_env *e, int fd, int x, int y)
 
 		if(x + e->x[i] > ft_strlen_tab(plateau) - 1|| x + e->x[i] < 0)
 		{
-			ft_putstr_fd(ft_itoa(test), fd);
-			ft_putstr_fd("\n", fd);
+//			ft_putstr_fd(ft_itoa(test), fd);
+//			ft_putstr_fd("\n", fd);
 			return(-1);
 		}
 		if(y + e->y[i] > ft_strlen(plateau[x]) || y + e->y[i] < 0)
 		{
-			ft_putstr_fd(ft_itoa(test), fd);
-			ft_putstr_fd("\n", fd);
+//			ft_putstr_fd(ft_itoa(test), fd);
+//			ft_putstr_fd("\n", fd);
 			return(-1);
 		}
 		if(plateau[x + e->x[i]][y + e->y[i]] != '.' && plateau[x + e->x[i]][y + e->y[i]] != 'X' && plateau[x + e->x[i]][y + e->y[i]] != 'x')
@@ -84,6 +84,7 @@ int ft_check_place(char **plateau, t_env *e, int fd, int x, int y)
 		exit(0);
 	str = ft_strjoin(ft_itoa(x - e->co_1erx), " ");
 	str2 = ft_strjoin(ft_itoa(y - e->co_1ery), "\n");
+	ft_putstr_fd("\n", fd);
 	ft_putstr_fd(ft_strjoin(str, str2), fd);
 	ft_putstr(ft_strjoin(str, str2));
 
@@ -122,6 +123,7 @@ int ft_check(char **plateau, t_env *e, int fd)
 		}
 		x++;
 	}
+	write(1, "42 42\n", 8);
 	exit(0);
 }
 
