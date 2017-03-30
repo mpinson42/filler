@@ -5,114 +5,130 @@ int ft_strlen_tab(char **tab)
 	int i;
 
 	i = 0;
+	if(tab == NULL)
+	{
+		return(0);
+	}
 	while(tab[i] != NULL)
 		i++;
-	return(i - 1);
+	return(i);
 }
 
 
 int ft_check_place(char **plateau, t_env *e, int fd, int x, int y)
 {
+	int count;
 	int i;
-	int bol;
 	char *str;
 	char *str2;
-	int count;
+	static int test = 0;
 
 	i = 0;
-	bol = 0;
 	count = 0;
+
+
+
+	if(plateau[x][y] == 'X' || plateau[x][y] == 'X')
+		count++;
+	if(plateau[x][y] != '.' && plateau[x][y] != 'X' && plateau[x][y] != 'x')
+		return(-1);
+	ft_putstr_fd(ft_itoa(e->x[i]), fd);
 	while(i < e->taille)
 	{
-		if(plateau[x][y] == 'x' || plateau[x][y] == 'X')
-		{
-			count++;
-		}
-		if(plateau[x][y] != 'x' && plateau[x][y] != 'X' && plateau[x][y] != '.')
-			return(-1);
-		if(e->x[i] + x > ft_strlen(plateau[0]) || e->x[i] + x < 0)
-			return(-1);
-		if(e->y[i] + y >= ft_strlen_tab(plateau) || e->y[i] + y < 0)
-			return(-1);
-		
+//		ft_putstr_fd("\nppppppppppppppppppppppppp\n", fd);
+//		ft_putstr_fd(ft_itoa(y + e->y[i]), fd);
+//		ft_putstr_fd(" > ", fd);
+//		ft_putstr_fd(ft_itoa(ft_strlen(plateau[x])), fd);
+//		ft_putstr_fd("\n", fd);
+//		ft_putstr_fd("\nppppppppppppppppppppppppp\n", fd);
 
-		if(plateau[e->x[i] + x][e->y[i] + y] == 'X')
+
+
+
+
+		if(x + e->x[i] > ft_strlen_tab(plateau) - 1|| x + e->x[i] < 0)
 		{
-	//		ft_putstr_fd("strop putin\n", fd);
-			count++;
-		}
-		if(plateau[e->x[i] + x][e->y[i] + y] != 'x' && plateau[e->x[i] + x][e->y[i] + y] != 'X' && plateau[e->x[i] + x][e->y[i] + y] != '.')
+			ft_putstr_fd(ft_itoa(test), fd);
+			ft_putstr_fd("\n", fd);
 			return(-1);
+		}
+		if(y + e->y[i] > ft_strlen(plateau[x]) || y + e->y[i] < 0)
+		{
+			ft_putstr_fd(ft_itoa(test), fd);
+			ft_putstr_fd("\n", fd);
+			return(-1);
+		}
+		if(plateau[x + e->x[i]][y + e->y[i]] != '.' && plateau[x + e->x[i]][y + e->y[i]] != 'X' && plateau[x + e->x[i]][y + e->y[i]] != 'x')
+			return(-1);
+		if(plateau[e->x[i] + x][y + e->y[i]] == 'x' || plateau[e->x[i] + x][y + e->y[i]] == 'X')
+			count++;
+
+
+
+
+
+
+
+
+
+
+
 		i++;
 	}
-	//ft_putstr_fd("strop putin\n", fd);
+	test++;
+//	ft_putstr_fd(ft_itoa(count), fd);
 	if(count != 1)
-			return(-1);
+		return(-1);
 
-	ft_putstr_fd("\n\n ----->", fd);
-	ft_putstr_fd(ft_itoa(x), fd);
-	ft_putstr_fd(" - ", fd);
-	ft_putstr_fd(ft_itoa(e->co_1erx), fd);
-	ft_putstr_fd(" ------ ", fd);
-	ft_putstr_fd(ft_itoa(y), fd);
-	ft_putstr_fd(" - ", fd);
-	ft_putstr_fd(ft_itoa(e->co_1ery), fd);
-	ft_putstr_fd("\n\n\n", fd);
-
-
-
+	if(test == 100)
+		exit(0);
 	str = ft_strjoin(ft_itoa(x - e->co_1erx), " ");
 	str2 = ft_strjoin(ft_itoa(y - e->co_1ery), "\n");
-//	ft_putstr_fd(ft_strjoin(str, str2), fd);
-
-	i = 0;
-
-
-
+	ft_putstr_fd(ft_strjoin(str, str2), fd);
 	ft_putstr(ft_strjoin(str, str2));
-	//	ft_putstr_fd("oui", fd);
-	//	ft_putstr_fd(ft_itoa(ft_strlen(ft_strjoin(str, str2))), fd);
-	return(1);
 
-	i = 0;
-
-
-
-
-
-
-
-	return(-1);
+	return(0);
 }
-
-
-
 
 int ft_check(char **plateau, t_env *e, int fd)
 {
 	int x;
 	int y;
+	int i;
+	int j;
+	int test = 0;
 
 	x = 0;
-//	ft_putstr_fd(ft_itoa(plateau[14][16]), fd);
-	ft_putstr_fd(ft_itoa(ft_strlen_tab(plateau)), fd);
-	while(plateau[x] != NULL)
+	i = 0;
+/*	while(plateau[x] != NULL)
+	{
+		ft_putstr_fd(plateau[x], fd);
+		ft_putstr_fd("\n", fd);
+		x++;
+	}*/
+	while(plateau[x])
 	{
 		y = 0;
 		while(plateau[x][y] != 0)
 		{
-			if(ft_check_place(plateau, e, fd, x, y) == 1)
+			if(x == ft_strlen_tab(plateau) && y == ft_strlen(plateau[x]))
+				exit(0);
+			if(ft_check_place(plateau, e, fd, x, y) == 0)
 				return(1);
+//			ft_putstr_fd(ft_itoa(test), fd);
+//			ft_putstr_fd("\n", fd);
+			test++;
 			y++;
 		}
 		x++;
 	}
-	return(0);
+	exit(0);
 }
 
 
 
 
 
-//x piece -> ligne
-//y piece -> colone
+
+//plateau = 24
+//plateau[] = 39
