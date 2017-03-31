@@ -208,19 +208,19 @@ void ft_cible(char **tableau, t_env *e, int fd)
 	ft_putstr_fd("\n\n\n\n\n\n\n", fd);*/ //iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
 	
 
+ft_putstr_fd("count", fd);
 
-
-
-	while(bol == 0 && tableau[x] != NULL)
+	x = 0;
+	while(bol == 0 && tableau[x])
 	{
+		y = 0;
 		while(tableau[x][y] != 0)
 		{
-			ft_putstr_fd("lol\n", fd);
-			if(tableau[x][y] == 'O' &&  e->befor[x][y] != tableau[x][y])
+			ft_putstr_fd("count", fd);
+			if(tableau[x][y] == 'O')
 			{
-				ft_putstr_fd("lol", fd);
-				e->cibley = y;
 				e->ciblex = x;
+				e->cibley = y;
 			}
 			y++;
 		}
@@ -244,6 +244,7 @@ int main(int argv, char **argc)
 	system("rm test");
 	system("touch test");
 	fd = open("./test", O_RDWR);
+	ft_putstr_fd("coucou", fd);
 	e.befor = NULL;
 	if(!(str = (char *)malloc(sizeof(char) * 16192)))
 		return(-1);
@@ -261,7 +262,7 @@ int main(int argv, char **argc)
 			lol++;
 		if(read(0, str, 16191) == -1)
 			return(0);
-	//	ft_putstr_fd(str, fd);
+		ft_putstr_fd(str, fd);
 		if(!(plateau = ft_get_plateau(str, fd, &e)))
 			return(0);
 		ft_cible(plateau, &e, fd);
