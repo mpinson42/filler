@@ -216,9 +216,9 @@ ft_putstr_fd("count", fd);
 		y = 0;
 		while(tableau[x][y] != 0)
 		{
-			ft_putstr_fd("count", fd);
-			if(tableau[x][y] == 'O')
+			if(tableau[x][y] == 'O' && e->befor[x][y] != tableau[x][y])
 			{
+				ft_putstr_fd("count", fd);
 				e->ciblex = x;
 				e->cibley = y;
 			}
