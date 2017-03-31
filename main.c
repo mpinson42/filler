@@ -182,34 +182,9 @@ void ft_cible(char **tableau, t_env *e, int fd)
 {
 	int x;
 	int y;
-	int savex;
 	static int bol = 1;
 
 	y = 0;
-	x = 0;
-	i = 0;
-/*	ft_putstr_fd("------plateau-->\n", fd);
-	while(tableau[i])
-	{
-		ft_putstr_fd(tableau[i], fd);
-		ft_putstr_fd("\n", fd);
-		i++;
-	}
-	i = 0;
-	ft_putstr_fd("\n\n\n\n\n\n\n", fd);
-	ft_putstr_fd("------befor-->\n", fd);
-	while(e->befor && e->befor[i])
-	{
-			
-		ft_putstr_fd(e->befor[i], fd);
-		ft_putstr_fd("\n", fd);
-		i++;
-	}
-	ft_putstr_fd("\n\n\n\n\n\n\n", fd);*/ //iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
-	
-
-ft_putstr_fd("count", fd);
-
 	x = 0;
 	while(bol == 0 && tableau[x])
 	{
@@ -239,7 +214,6 @@ int main(int argv, char **argc)
 	int lol;
 	int map;
 
-	//ft_bzero(str, 8096);
 	map = 3;
 	system("rm test");
 	system("touch test");
@@ -253,7 +227,6 @@ int main(int argv, char **argc)
 		plateau = NULL;
 		ft_memset(str, 0, 16192);
 		lol = 0;
-
 		while(lol < (int)(70000000 / 1.0f) && map == 3)
 			lol++;
 		while(lol < (int)(40000000 / 1.0f) && map == 2)
@@ -272,22 +245,11 @@ int main(int argv, char **argc)
 			map = 2;
 		else
 			map = 3;
-	//	ft_putstr_fd(ft_itoa(ft_strlen(plateau[0])), fd);
-	//	ft_putstr_fd("           ", fd);
-	//	ft_putstr_fd(ft_itoa(ft_strlen_tab(plateau)) ,fd);
-	//	ft_putstr_fd("\n", fd);
 		if(ft_get_piece(&e, str, fd) == -1)
 			return(0);
-	//	ft_putstr_fd("11 13\n", fd);
-
 		if(ft_check(plateau, &e, fd) == 0)
 			return(0);
 		e.befor = plateau;
-		//ft_putstr_fd("\nhaha\n", fd)
-
 	}
-
-
-	
 	return(0);
 }

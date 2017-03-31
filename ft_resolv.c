@@ -6,9 +6,7 @@ int ft_strlen_tab(char **tab)
 
 	i = 0;
 	if(tab == NULL)
-	{
 		return(0);
-	}
 	while(tab[i] != NULL)
 		i++;
 	return(i);
@@ -30,9 +28,6 @@ int ft_check_place(char **plateau, t_env *e, int fd, int x, int y)
 
 	i = 0;
 	count = 0;
-
-
-
 	if(plateau[x][y] == 'X' || plateau[x][y] == 'X')
 		count++;
 	if(plateau[x][y] != '.' && plateau[x][y] != 'X' && plateau[x][y] != 'x')
@@ -53,36 +48,9 @@ int ft_check_place(char **plateau, t_env *e, int fd, int x, int y)
 	if(count != 1)
 		return(-1);
 	i = 0;
-
-
-
-
 	e->sopx[e->sop_size] = x;
 	e->sopy[e->sop_size] = y;
-
-
-/*	while(i <= e->sop_size)
-	{
-		ft_putstr_fd("----LA---->", fd);
-		ft_putstr_fd(ft_itoa(e->sopx[i]), fd);
-		ft_putstr_fd("        ", fd);
-		ft_putstr_fd(ft_itoa(e->sopy[i]), fd);
-		ft_putstr_fd("\n", fd);
-		i++;
-	}
-
-	ft_putstr_fd("\n", fd);*/
-
-
 	e->sop_size++;
-
-
-
-
-
-
-
-
 	e->bol++;
 	return(-1);
 }
@@ -146,16 +114,10 @@ int ft_check(char **plateau, t_env *e, int fd)
 		}
 		x++;
 	}
-
-
 	i = ft_sop_chr(e, fd);
-
 	str = ft_strjoin(ft_itoa(e->sopx[i] - e->co_1erx), " ");
 	str2 = ft_strjoin(ft_itoa(e->sopy[i] - e->co_1ery), "\n");
 	ft_putstr(ft_strjoin(str, str2));
-
-
-
 	return(1);
 }
 
