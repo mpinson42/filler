@@ -4,19 +4,22 @@
 static int i = 0;
 
 
-char **ft_get_plateau(char *str, int fd)
+char **ft_get_plateau(char *str, int fd, t_env *e)
 {
 	char **map;
 	char **tmp;
 	int y;
 	int x;
 	int i;
+	static int bol = 0;
 	int test;
 
 	test = 0;
 	i = 8;
 	map = NULL;
 	tmp = NULL;
+	if(bol == 0)
+		e->joueur = ft_atoi(ft_strsub(str, 10, 1));
 	if(!(str = ft_strstr(str, "Plateau ")))
 		return(0);
 	x = ft_atoi(&str[8]);
@@ -48,8 +51,24 @@ char **ft_get_plateau(char *str, int fd)
 	{
 		if(!(map[i] = ft_strsub(tmp[i], 4, ft_strlen(tmp[i]))))
 			return(NULL);
+		y = 0;
+		while(map[i][y] && bol == 0)
+		{
+			if(map[i][y] == 'X' && e->joueur == 1)
+			{
+				e->ciblex = i;
+				e->cibley = y;
+			}
+			if(map[i][y] == 'O' && e->joueur == 2)
+			{
+				e->ciblex = i;
+				e->cibley = y;
+			}
+			y++;
+		}
 		i++;
 	}
+	bol = 1;
 	return(map);
 }
 
@@ -131,6 +150,11 @@ int ft_get_piece(t_env *e, char *str, int fd)
 		i++;
 	}
 	e->taille = count;
+	e->sop_size = 0;
+	e->bol = 0;
+	ft_bzero(e->sopx, 255);
+	ft_bzero(e->sopy, 255);
+
 
 
 /*	ft_putstr_fd("\n----------------------\n", fd);
@@ -154,6 +178,58 @@ int ft_get_piece(t_env *e, char *str, int fd)
 	return(0);
 }
 
+void ft_cible(char **tableau, t_env *e, int fd)
+{
+	int x;
+	int y;
+	int savex;
+	static int bol = 1;
+
+	y = 0;
+	x = 0;
+	i = 0;
+/*	ft_putstr_fd("------plateau-->\n", fd);
+	while(tableau[i])
+	{
+		ft_putstr_fd(tableau[i], fd);
+		ft_putstr_fd("\n", fd);
+		i++;
+	}
+	i = 0;
+	ft_putstr_fd("\n\n\n\n\n\n\n", fd);
+	ft_putstr_fd("------befor-->\n", fd);
+	while(e->befor && e->befor[i])
+	{
+			
+		ft_putstr_fd(e->befor[i], fd);
+		ft_putstr_fd("\n", fd);
+		i++;
+	}
+	ft_putstr_fd("\n\n\n\n\n\n\n", fd);*/ //iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+	
+
+
+
+
+	while(bol == 0 && tableau[x] != NULL)
+	{
+		while(tableau[x][y] != 0)
+		{
+			ft_putstr_fd("lol\n", fd);
+			if(tableau[x][y] == 'O' &&  e->befor[x][y] != tableau[x][y])
+			{
+				ft_putstr_fd("lol", fd);
+				e->cibley = y;
+				e->ciblex = x;
+			}
+			y++;
+		}
+		x++;
+	}
+	bol = 0;
+	ft_putstr_fd("\n\n\n\n\n\n\n", fd);
+}
+
 int main(int argv, char **argc)
 {
 	char *str;
@@ -161,37 +237,51 @@ int main(int argv, char **argc)
 	t_env e;
 	int fd = 0;
 	int lol;
+	int map;
 
 	//ft_bzero(str, 8096);
+	map = 3;
 	system("rm test");
 	system("touch test");
 	fd = open("./test", O_RDWR);
-	if(!(str = (char *)malloc(sizeof(char) * 8096)))
+	e.befor = NULL;
+	if(!(str = (char *)malloc(sizeof(char) * 16192)))
 		return(-1);
 	while(1)
 	{
 		plateau = NULL;
-		ft_memset(str, 0, 8096);
+		ft_memset(str, 0, 16192);
 		lol = 0;
 
-		while(lol < 33333333)
+		while(lol < (int)(70000000 / 1.0f) && map == 3)
 			lol++;
-		if(read(0, str, 8095) == -1)
+		while(lol < (int)(40000000 / 1.0f) && map == 2)
+			lol++;
+		while(lol < (int)(30000000 / 1.0f) && map == 1)
+			lol++;
+		if(read(0, str, 16191) == -1)
 			return(0);
-		if(!(plateau = ft_get_plateau(str, fd)))
+	//	ft_putstr_fd(str, fd);
+		if(!(plateau = ft_get_plateau(str, fd, &e)))
 			return(0);
-		ft_putstr_fd("11 13\n", fd);
+		ft_cible(plateau, &e, fd);
+		if(ft_strlen(plateau[0]) <= 17 || ft_strlen_tab(plateau) <= 15)
+			map = 1;
+		else if(ft_strlen(plateau[0]) <= 40 || ft_strlen_tab(plateau) <= 24)
+			map = 2;
+		else
+			map = 3;
+	//	ft_putstr_fd(ft_itoa(ft_strlen(plateau[0])), fd);
+	//	ft_putstr_fd("           ", fd);
+	//	ft_putstr_fd(ft_itoa(ft_strlen_tab(plateau)) ,fd);
+	//	ft_putstr_fd("\n", fd);
 		if(ft_get_piece(&e, str, fd) == -1)
 			return(0);
-
-		ft_putstr_fd("11 13\n", fd);
-
-
-		ft_putstr_fd(str, fd);
-		ft_putstr_fd("\n\n\n\n\n\n\n", fd);
+	//	ft_putstr_fd("11 13\n", fd);
 
 		if(ft_check(plateau, &e, fd) == 0)
 			return(0);
+		e.befor = plateau;
 		//ft_putstr_fd("\nhaha\n", fd)
 
 	}

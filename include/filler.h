@@ -17,8 +17,17 @@ typedef struct s_env
 	int co_1erx;
 	int co_1ery;
 	int taille;
+	int sopy[255];
+	int sopx[255];
+	int sop_size;
+	int bol;
+	int ciblex;
+	int cibley;
+	int joueur;
+	char **befor;
 }				t_env;
 
 int ft_check(char **plateau, t_env *e, int fd);
+int ft_strlen_tab(char **tab);
 
 #endif
