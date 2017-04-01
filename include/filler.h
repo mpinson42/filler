@@ -31,11 +31,12 @@ typedef struct s_env
 	void			*img;
 	char **plateau;
 	char *str;
+	char **tmp;
 	int fd;
 }				t_env;
 
 void ft_affichage(t_env e, char **plateau);
-int ft_check(char **plateau, t_env *e, int fd);
+int ft_check(char **plateau, t_env *e);
 int ft_strlen_tab(char **tab);
 
 #endif
