@@ -13,7 +13,7 @@ int ft_strlen_tab(char **tab)
 }
 
 
-int ft_check_place(char **plateau, t_env *e, int fd, int x, int y)
+int ft_check_placeX(char **plateau, t_env *e, int fd, int x, int y)
 {
 	int count;
 	int i;
@@ -55,6 +55,49 @@ int ft_check_place(char **plateau, t_env *e, int fd, int x, int y)
 	return(-1);
 }
 
+
+int ft_check_placeO(char **plateau, t_env *e, int fd, int x, int y)
+{
+	int count;
+	int i;
+	char *str;
+	char *str2;
+	int savex;
+	int savey;
+	int *sop_tmpy;
+	int *sop_tmpx;
+	static int bol = 0;
+	static int test = 0;
+
+	i = 0;
+	count = 0;
+	if(plateau[x][y] == 'O' || plateau[x][y] == 'O')
+		count++;
+	if(plateau[x][y] != '.' && plateau[x][y] != 'O' && plateau[x][y] != 'O')
+		return(-1);
+	while(i < e->taille)
+	{
+		if(x + e->x[i] > ft_strlen_tab(plateau) - 1|| x + e->x[i] < 0)
+			return(-1);
+		if(y + e->y[i] > ft_strlen(plateau[x]) || y + e->y[i] < 0)
+			return(-1);
+		if(plateau[x + e->x[i]][y + e->y[i]] != '.' && plateau[x + e->x[i]][y + e->y[i]] != 'O' && plateau[x + e->x[i]][y + e->y[i]] != 'o')
+			return(-1);
+		if(plateau[e->x[i] + x][y + e->y[i]] == 'o' || plateau[e->x[i] + x][y + e->y[i]] == 'O')
+			count++;
+		i++;
+	}
+	test++;
+	if(count != 1)
+		return(-1);
+	i = 0;
+	e->sopx[e->sop_size] = x;
+	e->sopy[e->sop_size] = y;
+	e->sop_size++;
+	e->bol++;
+	return(-1);
+}
+
 int ft_sop_chr(t_env *e, int fd)
 {
 	int i;
@@ -64,7 +107,7 @@ int ft_sop_chr(t_env *e, int fd)
 	int save2;
 
 	i = 0;
-	save = 999999999;
+	save = 9999;
 	save2 = 0;
 	while(i < e->sop_size)
 	{
@@ -77,12 +120,6 @@ int ft_sop_chr(t_env *e, int fd)
 			save = ciblex;
 			save2 = i;
 		}
-
-		ft_putstr_fd("----LA---->", fd);
-		ft_putstr_fd(ft_itoa(e->ciblex), fd);
-		ft_putstr_fd("        ", fd);
-		ft_putstr_fd(ft_itoa(e->cibley), fd);
-		ft_putstr_fd("\n", fd);
 		i++;
 	}
 	return(save2);
@@ -107,12 +144,18 @@ int ft_check(char **plateau, t_env *e, int fd)
 		{
 			if(x == ft_strlen_tab(plateau) && y == ft_strlen(plateau[x]))
 				exit(0);
-			if(ft_check_place(plateau, e, fd, x, y) == 0)
+			if(e->joueur == 2 && ft_check_placeX(plateau, e, fd, x, y) == 0)
+				return(1);
+			if(e->joueur == 1 && ft_check_placeO(plateau, e, fd, x, y) == 0)
 				return(1);
 			test++;
 			y++;
 		}
 		x++;
+	}
+	if(e->sopx[0] == 0 && e->sopy[0] == 0)
+	{
+		return(0);
 	}
 	i = ft_sop_chr(e, fd);
 	str = ft_strjoin(ft_itoa(e->sopx[i] - e->co_1erx), " ");
@@ -120,11 +163,3 @@ int ft_check(char **plateau, t_env *e, int fd)
 	ft_putstr(ft_strjoin(str, str2));
 	return(1);
 }
-
-
-
-
-
-
-//plateau = 24
-//plateau[] = 39

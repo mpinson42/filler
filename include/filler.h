@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
+# include <mlx.h>
 
 typedef struct s_env
 {
@@ -25,8 +26,15 @@ typedef struct s_env
 	int cibley;
 	int joueur;
 	char **befor;
+	void			*win;
+	void			*mlx;
+	void			*img;
+	char **plateau;
+	char *str;
+	int fd;
 }				t_env;
 
+void ft_affichage(t_env e, char **plateau);
 int ft_check(char **plateau, t_env *e, int fd);
 int ft_strlen_tab(char **tab);
 

@@ -84,6 +84,7 @@ int ft_get_piece(t_env *e, char *str, int fd)
 	char **tmp;
 	int first;
 	int segond;
+	char *test;
 
 	i = 6;
 	bol = 0;
@@ -98,13 +99,6 @@ int ft_get_piece(t_env *e, char *str, int fd)
 	while(str[i] && ft_isdigit(str[i]))
 		i++;
 	segond = ft_atoi(&str[i]);
-
-/*	ft_putstr_fd("\nchifffffffre\n", fd);
-	ft_putstr_fd("first = ", fd);
-	ft_putstr_fd(ft_itoa(first), fd);
-	ft_putstr_fd("segond = ", fd);
-	ft_putstr_fd(ft_itoa(segond), fd);*/
-
 	i = 0;
 	while(str[i] && str[i] != '.' && str[i] != '*')
 		i++;
@@ -124,7 +118,6 @@ int ft_get_piece(t_env *e, char *str, int fd)
 		return(-1);
 	if(!(tmp = ft_strsplit(str, '\n')))
 		return(-1);
-
 	i = 0;
 	while(tmp[i] != NULL)
 	{
@@ -154,27 +147,6 @@ int ft_get_piece(t_env *e, char *str, int fd)
 	e->bol = 0;
 	ft_bzero(e->sopx, 255);
 	ft_bzero(e->sopy, 255);
-
-
-
-/*	ft_putstr_fd("\n----------------------\n", fd);
-	i = 0;
-	while(i < count)
-	{
-		ft_putstr_fd(ft_itoa(e->x[i]), fd);
-		ft_putstr_fd(" ", fd);
-		i++;
-	}
-	ft_putstr_fd("\n", fd);
-	i = 0;
-	while(i < count)
-	{
-		ft_putstr_fd(ft_itoa(e->y[i]), fd);
-		ft_putstr_fd(" ", fd);
-		i++;
-	}
-	ft_putstr_fd("\n----------------------\n", fd);*/
-
 	return(0);
 }
 
@@ -191,9 +163,13 @@ void ft_cible(char **tableau, t_env *e, int fd)
 		y = 0;
 		while(tableau[x][y] != 0)
 		{
-			if(tableau[x][y] == 'O' && e->befor[x][y] != tableau[x][y])
+			if(e->joueur == 2 && tableau[x][y] == 'O' && e->befor[x][y] != tableau[x][y])
 			{
-				ft_putstr_fd("count", fd);
+				e->ciblex = x;
+				e->cibley = y;
+			}
+			if(e->joueur == 1 && tableau[x][y] == 'X' && e->befor[x][y] != tableau[x][y])
+			{
 				e->ciblex = x;
 				e->cibley = y;
 			}
@@ -202,7 +178,140 @@ void ft_cible(char **tableau, t_env *e, int fd)
 		x++;
 	}
 	bol = 0;
-	ft_putstr_fd("\n\n\n\n\n\n\n", fd);
+}
+
+void ft_draw_red(t_env e, int i,int  j, char **plateau)
+{
+	int x;
+	int y;
+	int largeur;
+	int grandeur;
+	int w;                                                                                                                            
+
+	w = 0;
+	y = 1000 / (ft_strlen(plateau[0] + 2)); // taille case
+	x = 1000 / (ft_strlen_tab(plateau) + 2);
+	largeur = y * i;
+	grandeur = x * j;
+
+	while(largeur < y * (i + 1))
+	{
+
+		grandeur = x * j;
+		while(grandeur < x * (j + 1))
+		{
+			mlx_pixel_put(e.mlx, e.win, grandeur, largeur, 0x00990000);
+
+			grandeur++;
+		}
+		largeur++;
+	}
+
+}
+
+void ft_draw_blue(t_env e, int  i,int  j, char **plateau)
+{
+	int x;
+	int y;
+	int largeur;
+	int grandeur;
+	int w;                                                                                                                            
+
+	w = 0;
+	y = 1000 / (ft_strlen(plateau[0] + 2)); // taille case
+	x = 1000 / (ft_strlen_tab(plateau) + 2);
+	largeur = y * i;
+	grandeur = x * j;
+
+	while(largeur < y * (i + 1))
+	{
+
+		grandeur = x * j;
+		while(grandeur < x * (j + 1))
+		{
+			mlx_pixel_put(e.mlx, e.win, grandeur, largeur, 0x000000FF);
+
+			grandeur++;
+		}
+		largeur++;
+	}
+
+
+
+
+}
+
+void ft_draw_grille(t_env e, char **plateau ,int i, int j)
+{
+	int x;
+	int y;
+	int lx;
+	int ly;
+	int draw;
+
+	y = 1000 / (ft_strlen(plateau[0] + 2)); // taille case
+	x = 1000 / (ft_strlen_tab(plateau) + 2);
+	lx = x;
+	ly = y;
+	while(lx < x * (ft_strlen(plateau[0]) + 1))
+	{
+		draw = 0;
+		while(draw < y * (ft_strlen_tab(plateau)))
+		{
+			mlx_pixel_put(e.mlx, e.win, lx, draw, 0x00FFFFFF);
+			draw++;	
+		}
+
+		lx = lx + x;
+	}
+	while(ly < y * (ft_strlen_tab(plateau) + 1))
+	{
+		draw = 0;
+		while(draw < x * (ft_strlen(plateau[0])))
+		{
+			mlx_pixel_put(e.mlx, e.win, draw, ly, 0x00FFFFFF);
+			draw++;	
+		}
+
+		ly = ly + y;
+	}
+}
+
+void ft_affichage(t_env e, char **plateau)
+{
+	uintmax_t i;
+	int j;
+
+	i = 0;
+	while(plateau[i] != NULL)
+	{
+		j = 0;
+		while(plateau[i][j] != 0)
+		{
+			if(plateau[i][j] == 'X')
+				ft_draw_blue(e, i, j, plateau);
+			if(plateau[i][j] == 'O')
+				ft_draw_red(e, i, j, plateau);
+			j++;
+		}
+		i++;
+	}
+	ft_draw_grille(e, plateau, i - 1, j - 1);
+}
+
+int		key_pressed(int kc, t_env *e)
+{
+
+
+
+
+
+	if(kc == 36)
+	{
+		ft_putstr("5 5\n");
+		exit(0);
+	}
+	return(0);
 }
 
 int main(int argv, char **argc)
@@ -210,16 +319,14 @@ int main(int argv, char **argc)
 	char *str;
 	char **plateau;
 	t_env e;
-	int fd = 0;
 	int lol;
 	int map;
+	int fd;
 
 	map = 3;
-	system("rm test");
-	system("touch test");
-	fd = open("./test", O_RDWR);
-	ft_putstr_fd("coucou", fd);
 	e.befor = NULL;
+	e.x = NULL;
+	e.y = NULL;
 	if(!(str = (char *)malloc(sizeof(char) * 16192)))
 		return(-1);
 	while(1)
@@ -227,15 +334,14 @@ int main(int argv, char **argc)
 		plateau = NULL;
 		ft_memset(str, 0, 16192);
 		lol = 0;
-		while(lol < (int)(70000000 / 1.0f) && map == 3)
+		while(lol < (int)(110000000 * 2) && map == 3)
 			lol++;
-		while(lol < (int)(40000000 / 1.0f) && map == 2)
+		while(lol < (int)(110000000 / 1.0f) && map == 2)
 			lol++;
-		while(lol < (int)(30000000 / 1.0f) && map == 1)
+		while(lol < (int)(90000000 / 1.0f) && map == 1)
 			lol++;
 		if(read(0, str, 16191) == -1)
 			return(0);
-		ft_putstr_fd(str, fd);
 		if(!(plateau = ft_get_plateau(str, fd, &e)))
 			return(0);
 		ft_cible(plateau, &e, fd);
@@ -248,7 +354,36 @@ int main(int argv, char **argc)
 		if(ft_get_piece(&e, str, fd) == -1)
 			return(0);
 		if(ft_check(plateau, &e, fd) == 0)
+		{
+			lol = 0;
+			if (!(e.mlx = mlx_init()))
+				return(0);
+			if (!(e.win = mlx_new_window(e.mlx, 1000, 1000, "filler")))
+				return(0);
+			static int truc = 0;
+			if(truc == 0)
+				ft_affichage(e, plateau);
+			truc = 1;
+			mlx_hook(e.win, 2, 1L << 0, &key_pressed, &e);
+			mlx_loop(e.mlx);
+	/*		while(plateau[lol])
+			{
+				ft_strdel(&plateau[lol]);
+				lol++;
+			}
+			free(plateau);
+			lol = 0;
+			while(e.befor[lol])
+			{
+				ft_strdel(&e.befor[lol]);
+				lol++;
+			}
+			free(e.befor);
+			free(str);
+			free(e.x);
+			free(e.y);*/
 			return(0);
+		}
 		e.befor = plateau;
 	}
 	return(0);
