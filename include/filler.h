@@ -46,6 +46,7 @@ typedef struct	s_env
 	int		fd;
 	char	**map2;
 	char	**tmp2;
+	int 	test;
 }				t_env;
 
 void			ft_affichage(t_env e, char **plateau, int *truc);

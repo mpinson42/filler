@@ -65,7 +65,7 @@ int		key_pressed(int kc, t_env *e)
 		free(e->str);
 		free(e->x);
 		free(e->y);
-		exit(0);
+		ft_putstr("5 5\n");
 	}
 	return (0);
 }
@@ -91,7 +91,8 @@ int red_cross(t_env *e)
 	free(e->str);
 	free(e->x);
 	free(e->y);
-	exit(0);
+	ft_putstr("5 5\n");
+	return(0);
 }
 
 int		ft_delay(t_env *e)
