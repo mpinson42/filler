@@ -6,7 +6,7 @@
 /*   By: mpinson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/01 22:54:09 by mpinson           #+#    #+#             */
-/*   Updated: 2017/04/02 13:30:24 by mpinson          ###   ########.fr       */
+/*   Updated: 2017/04/02 14:39:15 by mpinson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int		main(void)
 			ft_putstr("5 5\n");
 			if (!(e.mlx = mlx_init()))
 				return (0);
-			if (!(e.win = mlx_new_window(e.mlx, 1000, 1000, "filler")))
+			if (!(e.win = mlx_new_window(e.mlx, 2560, 1440, "filler")))
 				return (0);
 			if (truc == 0)
 				ft_affichage(e, e.plateau, &truc);
