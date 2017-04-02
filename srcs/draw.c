@@ -104,5 +104,5 @@ void	ft_affichage(t_env e, char **plateau, int *truc)
 		}
 	}
 	ft_draw_grille(e, plateau);
-	truc[0] = 1;
+	truc[0] = 0;
 }

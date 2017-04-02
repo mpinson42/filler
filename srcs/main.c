@@ -6,7 +6,7 @@
 /*   By: mpinson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/01 22:54:09 by mpinson           #+#    #+#             */
-/*   Updated: 2017/04/02 14:39:15 by mpinson          ###   ########.fr       */
+/*   Updated: 2017/04/02 13:30:24 by mpinson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,30 @@ int		key_pressed(int kc, t_env *e)
 	return (0);
 }
 
+int red_cross(t_env *e)
+{
+	int lol;
+
+	lol = 0;
+	while (e->plateau[lol])
+	{
+		ft_strdel(&e->plateau[lol]);
+		lol++;
+	}
+	free(e->plateau);
+	lol = 0;
+	while (e->befor[lol])
+	{
+		ft_strdel(&e->befor[lol]);
+		lol++;
+	}
+	free(e->befor);
+	free(e->str);
+	free(e->x);
+	free(e->y);
+	exit(0);
+}
+
 int		ft_delay(t_env *e)
 {
 	int			lol;
@@ -115,11 +139,11 @@ int		main(void)
 			ft_putstr("5 5\n");
 			if (!(e.mlx = mlx_init()))
 				return (0);
-			if (!(e.win = mlx_new_window(e.mlx, 2560, 1440, "filler")))
+			if (!(e.win = mlx_new_window(e.mlx, 1000, 1000, "filler")))
 				return (0);
-			if (truc == 0)
-				ft_affichage(e, e.plateau, &truc);
+			truc == 0 ? ft_affichage(e, e.plateau, &truc) : 0;
 			mlx_hook(e.win, 2, 1L << 0, &key_pressed, &e);
+			mlx_hook(e.win, 17, (1L << 17), &red_cross, &e);
 			mlx_loop(e.mlx);
 		}
 		e.befor = e.plateau;
