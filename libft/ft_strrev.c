@@ -12,17 +12,17 @@
 
 char	*ft_strrev(char *str)
 {
-	int i;
-	int a;
-	int stock;
-	int div;
+	int		i;
+	int		a;
+	char	stock;
+	int		div;
 
 	i = 0;
 	a = 0;
-	while (str[i] != '\0')
+	while (str[i + 1] != '\0')
 		i++;
 	div = i / 2;
-	while (i < div)
+	while (i > div)
 	{
 		stock = str[i];
 		str[i] = str[a];

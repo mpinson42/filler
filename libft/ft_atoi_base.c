@@ -5,50 +5,52 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpinson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/12/27 13:22:38 by mpinson           #+#    #+#             */
-/*   Updated: 2016/12/27 13:23:16 by mpinson          ###   ########.fr       */
+/*   Created: 2017/04/06 15:00:23 by mpinson           #+#    #+#             */
+/*   Updated: 2017/04/06 15:00:28 by mpinson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static void	fill_str(int *nb, int base, const char *str)
+int	check(char *str, int base)
 {
 	int	i;
+	int nb;
 
+	nb = 0;
 	i = 0;
-	while (ft_isdigit(str[i]))
+	while (ft_isdigit(str[i]) || (str[i] >= 97 && str[i] <= 122) ||
+		(str[i] >= 65 && str[i] <= 90))
 	{
-		*nb = (*nb) * base;
-		if (str[i] >= '0' && str[i] <= '9')
-			*nb = *nb + (str[i] - '0');
-		else if (str[i] >= 'a' && str[i] <= 'z')
-			*nb = *nb + (str[i] - 'a' + 10);
-		else if (str[i] >= 'A' && str[i] <= 'Z')
-			*nb = *nb + (str[i] - 'A' + 10);
+		nb = nb * base;
+		if (str[i] >= 48 && str[i] <= 57)
+		{
+			nb = nb + (str[i] - 48);
+		}
+		else if (str[i] >= 97 && str[i] <= 122)
+			nb = nb + (str[i] - 97 + 10);
+		else if (str[i] >= 65 && str[i] <= 90)
+			nb = nb + (str[i] - 65 + 10);
 		i++;
 	}
+	return (nb);
 }
 
-int			ft_atoi_base(const char *str, int base)
+int	ft_atoi_base(char *str, int base)
 {
-	int nb;
-	int neg;
 	int i;
+	int neg;
 
 	i = 0;
 	neg = 1;
-	nb = 0;
 	while (str[i] == '\n' || str[i] == '\v' || str[i] == '\t' || str[i] == '\r'
 			|| str[i] == '\f' || str[i] == ' ')
 		i++;
 	if (str[i] == '-' || str[i] == '+')
 	{
 		if (str[i] == '-')
-			neg = (-1);
+			neg = -1;
 		i++;
 	}
-	fill_str(&nb, base, str + i);
-	nb = nb * neg;
-	return (nb);
+	return (check(&str[i], base) * neg);
 }

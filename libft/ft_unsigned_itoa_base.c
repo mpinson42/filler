@@ -5,57 +5,85 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpinson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/12/27 11:39:05 by mpinson           #+#    #+#             */
-/*   Updated: 2016/12/28 13:21:30 by mpinson          ###   ########.fr       */
+/*   Created: 2017/04/06 14:58:13 by mpinson           #+#    #+#             */
+/*   Updated: 2017/04/06 15:16:59 by mpinson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	det_size(uintmax_t n, int base)
+static int	ft_get_len(uintmax_t n, int base)
 {
-	int		count;
+	int i;
 
-	count = 0;
+	i = 0;
 	while (n != 0)
 	{
 		n = n / base;
-		count++;
+		i++;
 	}
-	return (count);
+	return (i);
 }
 
-static void	ft_calcul_rec(uintmax_t n, int base, char *str)
+static char	*ft_neg(uintmax_t n, int base, int len)
 {
-	if (n != 0)
+	char	*str;
+	char	*cmp;
+	int		i;
+
+	i = 1;
+	cmp = "0123456789abcdef";
+	if (!(str = (char *)malloc(sizeof(char) * (len + 2))))
+		return (NULL);
+	str[0] = '-';
+	str[len + 2] = 0;
+	while (len + 1)
 	{
-		ft_calcul_rec(n / base, base, str);
-		while (*str)
-			str++;
-		if (n % base < 10)
-			*str = (n % base) + '0';
-		else
-			*str = (n % base) - 10 + 'a';
+		str[len + 1] = cmp[n % base];
+		n = n / base;
+		len--;
 	}
+	if (str[1] == '0')
+		str = ft_strsub(str, 2, ft_strlen(str) - 2);
+	ft_strjoin("-", str);
+	return (str);
+}
+
+static char	*init(int *neg, int *i)
+{
+	char *cmp;
+
+	cmp = "0123456789abcdef";
+	neg[0] = 1;
+	i[0] = 0;
+	return (cmp);
 }
 
 char		*unsigned_itoa_base(uintmax_t n, int base)
 {
-	int		size;
+	int		i;
+	int		len;
+	int		neg;
 	char	*str;
+	char	*cmp;
 
+	cmp = init(&neg, &i);
+	len = ft_get_len(n, base);
+	neg = 1;
 	if (n == 0)
-	{
-		str = (char*)malloc(2 * sizeof(char));
-		str[0] = '0';
-		str[1] = '\0';
-	}
+		return (ft_strdup("0"));
+	if (neg && !(str = (char *)malloc(sizeof(char) * (len + 1))))
+		return (NULL);
 	else
+		return (ft_neg(n, base, len));
+	str[len + 1] = 0;
+	while (len + 1)
 	{
-		size = det_size(n, base);
-		str = (char*)malloc((size + 2) * sizeof(char));
-		ft_bzero(str, size + 2);
-		ft_calcul_rec(n, base, str);
+		str[len] = cmp[n % base];
+		n = n / base;
+		len--;
 	}
+	if (str[0] == '0')
+		str = ft_strsub(str, 1, ft_strlen(str) - 1);
 	return (str);
 }
