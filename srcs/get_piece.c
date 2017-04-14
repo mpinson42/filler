@@ -72,8 +72,12 @@ int		ft_get_piece(t_env *e, char *str)
 
 	bol = 0;
 	e->tmp = get_plat_piece(str, &count);
+//	if(e->x)
+//		free(e->x);
 	if (!(e->x = (int *)malloc(sizeof(int) * (count))))
 		return (-1);
+//	if(e->y)
+//		free(e->y);
 	if (!(e->y = (int *)malloc(sizeof(int) * (count))))
 		return (-1);
 	i = -1;

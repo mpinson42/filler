@@ -55,12 +55,12 @@ int		key_pressed(int kc, t_env *e)
 			lol++;
 		}
 		free(e->plateau);
-		lol = 0;
-		while (e->befor[lol])
-		{
-			ft_strdel(&e->befor[lol]);
-			lol++;
-		}
+//		lol = 0;
+//		while (e->befor[lol])
+//		{
+//			ft_strdel(&e->befor[lol]);
+//			lol++;
+//		}
 		free(e->befor);
 		free(e->str);
 		free(e->x);
@@ -81,12 +81,12 @@ int red_cross(t_env *e)
 		lol++;
 	}
 	free(e->plateau);
-	lol = 0;
-	while (e->befor[lol])
-	{
-		ft_strdel(&e->befor[lol]);
-		lol++;
-	}
+//	lol = 0;
+//	while (e->befor[lol])
+//	{
+//		ft_strdel(&e->befor[lol]);
+//		lol++;
+//	}
 	free(e->befor);
 	free(e->str);
 	free(e->x);
@@ -126,9 +126,11 @@ int		ft_delay(t_env *e)
 int		main(void)
 {
 	t_env		e;
+	//int i;
 	static int	truc = 0;
 
 	e.befor = NULL;
+	e.map2 = NULL;
 	if (!(e.str = (char *)malloc(sizeof(char) * 16192)))
 		return (-1);
 	while (1)
