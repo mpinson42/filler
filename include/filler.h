@@ -29,8 +29,8 @@ typedef struct	s_env
 	int		co_1erx;
 	int		co_1ery;
 	int		taille;
-	int		sopy[2048];
-	int		sopx[2048];
+	int		sopy[10048];
+	int		sopx[10048];
 	int		sop_size;
 	int		bol;
 	int		ciblex;

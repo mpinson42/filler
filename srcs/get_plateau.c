@@ -25,7 +25,7 @@ int		ft_plat_plat(t_env *e, char *str, int *y, int *x)
 	while (str[i] && ft_isdigit(str[i]))
 		i++;
 	y[0] = ft_atoi(&str[i]);
-	if(e->map2)
+/*	if(e->map2)
 	{	i = 0;
 		while(e->map2[i + 1])
 		{
@@ -33,7 +33,7 @@ int		ft_plat_plat(t_env *e, char *str, int *y, int *x)
 			i++;
 		}
 		free(e->map2);
-	}
+	}*/
 	if (!(e->map2 = (char **)malloc(sizeof(char *) * (x[0] + 1))))
 		return (-1);
 	i = -1;
@@ -42,12 +42,13 @@ int		ft_plat_plat(t_env *e, char *str, int *y, int *x)
 	i = -1;
 	while (e->map2[++i])
 	{
-		if(e->map2[i])
-			free(e->map2[i]);
+//		if(e->map2[i])
+//			free(e->map2[i]);
 		if (!(e->map2[i] = (char *)malloc(sizeof(char) * (y[0] + 2))))
 			return (-1);
 		ft_memset(e->map2[i], 0, y[0] + 2);
 	}
+	e->map2[i] = NULL;
 	bol = 1;
 	return (0);
 }

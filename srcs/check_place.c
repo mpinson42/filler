@@ -34,7 +34,7 @@ int	ft_check_placex(char **plateau, t_env *e, int x, int y)
 	count = 0;
 	if (plateau[x][y] == 'X' || plateau[x][y] == 'X')
 		count++;
-	while (++i < e->taille)
+	while (++i < e->taille && i < 5000)
 	{
 		if (ft_fat_conditionx(e, i, x, y) == -1)
 			return (-1);
@@ -72,7 +72,7 @@ int	ft_check_placeo(char **plateau, t_env *e, int x, int y)
 	count = 0;
 	if (plateau[x][y] == 'O' || plateau[x][y] == 'O')
 		count++;
-	while (++i < e->taille)
+	while (++i < e->taille && i < 5000)
 	{
 		if (ft_fat_conditiono(e, i, x, y) == -1)
 			return (-1);

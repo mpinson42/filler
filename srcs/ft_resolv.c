@@ -35,7 +35,7 @@ int	ft_sop_chr(t_env *e)
 	i = -1;
 	save = 999999999;
 	save2 = 0;
-	while (++i < e->sop_size)
+	while (++i < e->sop_size && i < 5000)
 	{
 		ciblex = ft_absolut(e->ciblex - e->sopx[i]);
 		cibley = ft_absolut(e->cibley - e->sopy[i]);

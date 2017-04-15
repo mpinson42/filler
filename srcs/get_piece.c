@@ -87,6 +87,7 @@ int		ft_get_piece(t_env *e, char *str)
 		while (e->tmp[i][++y] != 0)
 			retest(e, i, y, &bol);
 	}
+	e->tmp[i] = NULL;
 	e->taille = count;
 	e->sop_size = 0;
 	e->bol = 0;

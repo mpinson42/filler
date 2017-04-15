@@ -61,7 +61,7 @@ int		key_pressed(int kc, t_env *e)
 //			ft_strdel(&e->befor[lol]);
 //			lol++;
 //		}
-		free(e->befor);
+//		free(e->befor);
 		free(e->str);
 		free(e->x);
 		free(e->y);
@@ -87,7 +87,7 @@ int red_cross(t_env *e)
 //		ft_strdel(&e->befor[lol]);
 //		lol++;
 //	}
-	free(e->befor);
+//	free(e->befor);
 	free(e->str);
 	free(e->x);
 	free(e->y);
@@ -103,7 +103,7 @@ int		ft_delay(t_env *e)
 	e->plateau = NULL;
 	ft_memset(e->str, 0, 16192);
 	lol = 0;
-	while (lol < (int)(110000000 * 2) && map == 3)
+	while (lol < (int)(110000000 * 1) && map == 3)
 		lol++;
 	while (lol < (int)(110000000 / 1.0f) && map == 2)
 		lol++;
@@ -131,6 +131,8 @@ int		main(void)
 
 	e.befor = NULL;
 	e.map2 = NULL;
+//	e.sopx[10048] = 255;
+//	e.sopy[10048] = 255;
 	if (!(e.str = (char *)malloc(sizeof(char) * 16192)))
 		return (-1);
 	while (1)
@@ -140,6 +142,7 @@ int		main(void)
 		if (ft_check(e.plateau, &e) == 0)
 		{
 			ft_putstr("5 5\n");
+			exit(0);
 			if (!(e.mlx = mlx_init()))
 				return (0);
 			if (!(e.win = mlx_new_window(e.mlx, 1000, 1000, "filler")))
