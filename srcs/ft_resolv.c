@@ -35,7 +35,7 @@ int	ft_sop_chr(t_env *e)
 	i = -1;
 	save = 999999999;
 	save2 = 0;
-	while (++i < e->sop_size && i < 5000)
+	while (++i < e->sop_size)
 	{
 		ciblex = ft_absolut(e->ciblex - e->sopx[i]);
 		cibley = ft_absolut(e->cibley - e->sopy[i]);
@@ -57,6 +57,7 @@ int	ft_check(char **plateau, t_env *e)
 	char	*str2;
 
 	x = -1;
+//	write(e->fd, "nosegfault--befor\n", 18);
 	while (plateau[++x])
 	{
 		y = -1;
@@ -68,7 +69,8 @@ int	ft_check(char **plateau, t_env *e)
 				return (1);
 		}
 	}
-	if (e->sopx[0] == 0 && e->sopy[0] == 0)
+//	write(e->fd, "nosegfault--befor-befor\n", 25);
+	if (e->sop_size == 0 || (e->sopx[0] == 0 && e->sopy[0] == 0))
 		return (0);
 	y = ft_sop_chr(e);
 	str = ft_strjoin(ft_itoa(e->sopx[y] - e->co_1erx), " ");

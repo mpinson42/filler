@@ -29,8 +29,8 @@ typedef struct	s_env
 	int		co_1erx;
 	int		co_1ery;
 	int		taille;
-	int		sopy[10048];
-	int		sopx[10048];
+	int		sopy[10000];
+	int		sopx[10000];
 	int		sop_size;
 	int		bol;
 	int		ciblex;
@@ -47,6 +47,7 @@ typedef struct	s_env
 	char	**map2;
 	char	**tmp2;
 	int 	test;
+	int 	nb_map;
 }				t_env;
 
 void			ft_affichage(t_env e, char **plateau, int *truc);

@@ -13,7 +13,7 @@ $(NAME): $(SRC)
 	@echo "mpinson" > auteur
 	@make -C ./libft all
 	@cp ./libft/libft.a ./lib
-	gcc $(FLAGS) -I ./include/ -L/usr/local/lib/ -L./lib -I/usr/local/include -lft -lmlx -framework OpenGL -framework AppKit -o $(NAME) $(SRC)
+	gcc $(FLAGS) -g -I ./include/ -L/usr/local/lib/ -L./lib -I/usr/local/include -lft -lmlx -framework OpenGL -framework AppKit -o $(NAME) $(SRC)
 
 
 clean:

@@ -83,6 +83,8 @@ int		ft_get_piece(t_env *e, char *str)
 	i = -1;
 	while (e->tmp[++i] != NULL)
 	{
+		ft_putstr_fd(e->tmp[i], e->fd);
+		ft_putstr_fd("\n", e->fd);
 		y = -1;
 		while (e->tmp[i][++y] != 0)
 			retest(e, i, y, &bol);
@@ -91,7 +93,7 @@ int		ft_get_piece(t_env *e, char *str)
 	e->taille = count;
 	e->sop_size = 0;
 	e->bol = 0;
-	ft_bzero(e->sopx, 255);
-	ft_bzero(e->sopy, 255);
+	ft_bzero(e->sopx, 10000);
+	ft_bzero(e->sopy, 10000);
 	return (0);
 }

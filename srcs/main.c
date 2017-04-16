@@ -20,7 +20,7 @@ void	ft_cible(char **tableau, t_env *e)
 	static int	bol = 1;
 
 	x = -1;
-	while (bol == 0 && tableau[++x])
+	while (bol == 0 && e->nb_map != 1 && tableau[++x])
 	{
 		y = -1;
 		while (tableau[x][++y] != 0)
@@ -38,6 +38,11 @@ void	ft_cible(char **tableau, t_env *e)
 				e->cibley = y;
 			}
 		}
+	}
+	if(e->nb_map == 1)
+	{
+		e->ciblex = 8;
+		e->cibley = 8;
 	}
 	bol = 0;
 }
@@ -98,29 +103,113 @@ int red_cross(t_env *e)
 int		ft_delay(t_env *e)
 {
 	int			lol;
-	static int	map = 3;
-
+	char *tmp;
+	int i;
+//	static int	map = 3;
+	e->nb_map = 0;
 	e->plateau = NULL;
-	ft_memset(e->str, 0, 16192);
+	ft_memset(e->str, 0, 1000);
 	lol = 0;
-	while (lol < (int)(110000000 * 1) && map == 3)
+/*	while (lol < (int)(110000000 * 0.8) && map == 3)
 		lol++;
 	while (lol < (int)(110000000 / 1.0f) && map == 2)
 		lol++;
-	while (lol < (int)(100000000 / 1.0f) && map == 1)
-		lol++;
-	if (read(0, e->str, 16191) == -1)
+	while (lol < (int)(100000000 * 0.257) && map == 1)
+		lol++;*/
+//	if (read(0, e->str, 161910) == -1)
+//		return (0);
+	while((lol = get_next_line(0, &tmp)) >= 1)
+	{
+//		ft_putstr_fd(tmp, fd);
+//		ft_putstr_fd("\n", fd);
+		if(ft_strncmp("Piece", tmp, 5) == 0)
+		{
+			tmp = ft_strjoin(tmp, ft_strdup("\n"));
+			e->str = ft_strjoin(e->str, tmp);
+			i = ft_atoi(tmp + 5);
+//			write(fd, ft_itoa(i), ft_strlen(ft_itoa(i)));
+			while(i)
+			{
+				if(get_next_line(0, &tmp) == -1)
+					return(0);
+				tmp = ft_strjoin(tmp, ft_strdup("\n"));
+				e->str = ft_strjoin(e->str, tmp);
+			//	ft_putstr_fd(e->str, fd);
+				i--;
+			}
+			break;
+		}
+		tmp = ft_strjoin(tmp, ft_strdup("\n"));
+		e->str = ft_strjoin(e->str, tmp);
+	}
+	write(e->fd, e->str, ft_strlen(e->str));
+	write(e->fd, "\n\n\n", 3);
+
+
+	if (lol == -1 || !(e->plateau = ft_get_plateau(e->str, e)))
 		return (0);
-	if (!(e->plateau = ft_get_plateau(e->str, e)))
-		return (0);
-	ft_cible(e->plateau, e);
 	if (ft_strlen(e->plateau[0]) <= 17 || ft_strlen_tab(e->plateau) <= 15)
-		map = 1;
-	else if (ft_strlen(e->plateau[0]) <= 40 || ft_strlen_tab(e->plateau) <= 24)
-		map = 2;
-	else
-		map = 3;
+		e->nb_map = 1;
+	ft_cible(e->plateau, e);
 	return (1);
+}
+
+int	checkx(char **tableau, t_env *e)
+{
+	int			x;
+	int			y;
+	static int	bol = 1;
+
+	x = -1;
+	while (bol == 0 && tableau[++x])
+	{
+		y = -1;
+		while (tableau[x][++y] != 0)
+		{
+			if (e->joueur == 2 && tableau[x][y] == 'O' &&
+				e->befor[x][y] != tableau[x][y])
+			{
+				return(0);
+			}
+			if (e->joueur == 1 && tableau[x][y] == 'X' &&
+				e->befor[x][y] != tableau[x][y])
+			{
+				return(0);
+			}
+		}
+	}
+	bol = 0;
+	return(1);
+}
+
+int ft_fin(char **str, t_env *e)
+{
+	int X;
+	int O;
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	X = 0;
+	O = 0;
+	(void)e;
+	while(str[i] != NULL)
+	{
+		j = 0;
+		while(str[i][j])
+		{
+			if(str[i][j] == 'x')
+				X++;
+			if(str[i][j] == 'o')
+				O++;
+			j++;
+		}
+		i++;
+	}
+	if(X < O && checkx(str, e))
+		return(1);
+	return(0);
 }
 
 int		main(void)
@@ -131,21 +220,26 @@ int		main(void)
 
 	e.befor = NULL;
 	e.map2 = NULL;
+	system("rm test");
+	system("touch test");
+	e.fd = open("./test", O_RDWR);
 //	e.sopx[10048] = 255;
 //	e.sopy[10048] = 255;
-	if (!(e.str = (char *)malloc(sizeof(char) * 16192)))
+	if (!(e.str = (char *)malloc(sizeof(char) * 10000)))
 		return (-1);
 	while (1)
 	{
 		if ((ft_delay(&e) == 0) || (ft_get_piece(&e, e.str) == -1))
 			return (0);
+//		write(e.fd, "nosegfault--", 13);
 		if (ft_check(e.plateau, &e) == 0)
 		{
 			ft_putstr("5 5\n");
-			exit(0);
+//			write(e.fd, "no segfault ?", 12);
+		//	exit(0);
 			if (!(e.mlx = mlx_init()))
 				return (0);
-			if (!(e.win = mlx_new_window(e.mlx, 1000, 1000, "filler")))
+			if (!(e.win = mlx_new_window(e.mlx, 2560, 1440, "filler")))
 				return (0);
 			truc == 0 ? ft_affichage(e, e.plateau, &truc) : 0;
 			mlx_hook(e.win, 2, 1L << 0, &key_pressed, &e);
