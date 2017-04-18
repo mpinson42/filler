@@ -12,93 +12,113 @@
 
 #include "libft.h"
 
-static	size_t	check_static(char *str)
+int		ft_check_static(t_env2 *e, char **line)
 {
-	int	index;
+	int i;
 
-	index = -1;
-	if (!str)
-		return (0);
-	while (str[++index] != '\0')
+	i = 0;
+	if (ft_strchr(e->str, '\n') != NULL)
 	{
-		if (str[index] == '\n')
-			return (index + 1);
+		while (e->str[i] && e->str[i] != '\n')
+			i++;
+		line[0] = ft_strjoin(line[0], ft_strsub(e->str, 0, i));
+		e->str = ft_strsub(e->str, i + 1, BUFF_SIZE);
+		return (1);
+	}
+	else
+	{
+		line[0] = ft_strjoin(line[0], e->str);
+		ft_strdel(&e->str);
 	}
 	return (0);
 }
 
-static int		read_fd(int fd, char *buf)
+t_env2	*ft_check_fd(t_env2 *e, int fd)
 {
-	int		ret;
+	int		bol;
+	t_env2	*tmp2;
 
-	if ((ret = read(fd, buf, BUFF_SIZE)) != -1)
-		buf[ret] = '\0';
-	return (ret);
-}
-
-static char		*free_join(char *s1, char *s2, int lib)
-{
-	char	*tmp;
-
-	tmp = ft_strjoin(s1, s2);
-	if (s1 && (lib == 3 || lib == 2))
-		ft_memdel((void **)&s1);
-	if (s2 && (lib == 3 || lib == 1))
-		ft_memdel((void **)&s2);
-	return (tmp);
-}
-
-static t_fd		*get_fd(t_fd *lst_fd, int fd)
-{
-	t_fd	*l_tmp;
-
-	l_tmp = lst_fd;
-	if (l_tmp)
+	bol = 0;
+	while (e->presed)
+		e = e->presed;
+	while (e->next && fd != e->fd)
+		e = e->next;
+	if (fd == e->fd)
+		return (e);
+	else
 	{
-		while (l_tmp->next)
-		{
-			if (l_tmp->fd == fd)
-				return (l_tmp);
-			l_tmp = l_tmp->next;
-		}
-		if (l_tmp->fd == fd)
-			return (l_tmp);
-		if (!(l_tmp->next = (t_fd *)malloc(sizeof(t_fd))))
-			return (NULL);
-		l_tmp = l_tmp->next;
+		tmp2 = (t_env2 *)malloc(sizeof(t_env2));
+		tmp2->next = NULL;
+		tmp2->presed = e;
+		tmp2->str = NULL;
+		tmp2->fd = fd;
+		tmp2->bol = 0;
+		e->next = tmp2;
+		e = e->next;
 	}
-	else if (!(l_tmp = (t_fd *)malloc(sizeof(t_fd))))
-		return (NULL);
-	l_tmp->fd = fd;
-	l_tmp->lne = ft_strdup("");
-	l_tmp->next = NULL;
-	l_tmp->srt = (!lst_fd) ? l_tmp : lst_fd;
-	return (l_tmp);
+	return (e);
 }
 
-int				get_next_line(int const fd, char **line)
+int		ft_suit(char **line, t_env2 *e, int fd)
 {
-	static t_fd		*cur_fd = NULL;
-	char			buf[BUFF_SIZE + 1];
-	char			*str;
-	int				len;
-	int				ret;
+	char	str[BUFF_SIZE + 1];
+	int		test;
+	int		i;
 
-	ret = 0;
+	i = 0;
+	ft_bzero(str, BUFF_SIZE + 1);
+	while ((test = read(fd, str, BUFF_SIZE)) > 0)
+	{
+		if (ft_strchr(str, '\n') != NULL)
+		{
+			while (str[i] != '\0' && str[i] != '\n')
+				i++;
+			line[0] = ft_strjoin(line[0], ft_strsub(str, 0, i));
+			e->str = ft_strsub(str, i + 1, BUFF_SIZE);
+			return (1);
+		}
+		else
+			line[0] = ft_strjoin(line[0], str);
+		ft_bzero(str, BUFF_SIZE + 1);
+	}
+	if (fd < 0 || test == -1)
+		return (-1);
+	return (0);
+}
+
+int		ft_fin(t_env2 *e, char **line)
+{
+	if (line[0][0] != 0 && e->bol == 0)
+	{
+		e->bol = 1;
+		return (1);
+	}
+	return (0);
+}
+
+int		get_next_line(const int fd, char **line)
+{
+	static t_env2	*e = NULL;
+	int				i;
+
+	i = 0;
 	if (fd < 0 || line == NULL)
 		return (-1);
-	cur_fd = get_fd(cur_fd, fd);
-	while (fd >= 0 && ((len = check_static(cur_fd->lne)) ||
-				(ret = read_fd(fd, buf)) > 0) && len <= 0)
-		cur_fd->lne = free_join(cur_fd->lne, buf, 2);
-	if (ret == -1)
-		return (-1);
-	if (len > 0)
-		cur_fd->lne[len - 1] = '\0';
-	*line = ft_strdup(cur_fd->lne);
-	str = cur_fd->lne;
-	cur_fd->lne = ((len > 0) ? ft_strdup(cur_fd->lne + len) : ft_strdup(""));
-	free(str);
-	cur_fd = cur_fd->srt;
-	return ((len || **line) ? 1 : 0);
+	if (!e || e->fd != fd)
+	{
+		if (!(e = (t_env2 *)malloc(sizeof(t_env2))))
+			return (-1);
+		e->next = NULL;
+		e->presed = NULL;
+		e->str = NULL;
+		e->fd = fd;
+		e->bol = 0;
+	}
+	line[0] = ft_strdup("");
+	e = ft_check_fd(e, fd);
+	if (e->str && ft_check_static(e, line) == 1)
+		return (1);
+	if ((i = ft_suit(line, e, fd)) != 0)
+		return (i);
+	return (ft_fin(e, line));
 }

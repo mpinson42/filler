@@ -153,9 +153,9 @@ int	ft_check(char **plateau, t_env *e)
 	write(e->fd, "il est la-\n", 11);
 
 
-	str = ft_strjoin(ft_itoa_base(e->sopx[y] - e->co_1erx, 10), ft_strdup(" "));
+	str = ft_strjoin(ft_itoa_base(e->sopx[y] - e->co_1erx, 10), " ");
 	write(e->fd, "il est la2\n", 11);
-	str2 = ft_strjoin(ft_itoa_base(e->sopy[y] - e->co_1ery, 10), ft_strdup("\n"));
+	str2 = ft_strjoin(ft_itoa_base(e->sopy[y] - e->co_1ery, 10), "\n");
 	write(e->fd, "il est la3\n", 11);
 	ft_putstr(ft_strjoin(str, str2));
 	write(e->fd, "il est la4\n", 11);

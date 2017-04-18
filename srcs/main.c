@@ -68,7 +68,7 @@ int		key_pressed(int kc, t_env *e)
 //			lol++;
 //		}
 //		free(e->befor);
-		free(e->str);
+//		free(e->str);
 		ft_putstr("5 5\n");
 	}
 	return (0);
@@ -97,6 +97,19 @@ int red_cross(t_env *e)
 	return(0);
 }
 
+void ft_join(char *str, t_env *e)
+{
+	int i;
+
+	i = 0;
+	while(str[i])
+	{
+		e->str[e->count] = str[i];
+		i++;
+		e->count++;
+	}
+}
+
 int		ft_delay(t_env *e)
 {
 	int			lol;
@@ -116,29 +129,35 @@ int		ft_delay(t_env *e)
 //	if (read(0, e->str, 161910) == -1)
 //		return (0);
 //	e->save = e->plateau;
+	write(e->fd, "il est la7\n", 11);
 	while((lol = get_next_line(0, &tmp)) >= 1)
 	{
-//		ft_putstr_fd(tmp, fd);
-//		ft_putstr_fd("\n", fd);
-		if(ft_strncmp("Piece", tmp, 5) == 0)
+		ft_bzero(e->test2, 500);
+		ft_strcpy(e->test2, tmp);
+//		ft_putstr_fd("1et gnl\n" ,e->fd);
+		if(ft_strncmp("Piece", e->test2, 5) == 0)
 		{
-			tmp = ft_strjoin(tmp, ft_strdup("\n"));
-			e->str = ft_strjoin(e->str, tmp);
-			i = ft_atoi(tmp + 5);
+			e->test2[ft_strlen(e->test2)] = '\n';
+			ft_join(e->test2, e);
+			i = ft_atoi(e->test2 + 5);
+			ft_putstr_fd(e->test2 + 5, e->fd);
 //			write(fd, ft_itoa(i), ft_strlen(ft_itoa(i)));
 			while(i)
 			{
+				ft_putstr_fd("2et gnl\n" ,e->fd);
 				if(get_next_line(0, &tmp) == -1)
 					return(0);
-				tmp = ft_strjoin(tmp, ft_strdup("\n"));
-				e->str = ft_strjoin(e->str, tmp);
+				ft_bzero(e->test2, 500);
+				ft_strcpy(e->test2, tmp);
+				e->test2[ft_strlen(e->test2)] = '\n';
+				ft_join(e->test2, e);
 			//	ft_putstr_fd(e->str, fd);
 				i--;
 			}
 			break;
 		}
-		tmp = ft_strjoin(tmp, ft_strdup("\n"));
-		e->str = ft_strjoin(e->str, tmp);
+		e->test2[ft_strlen(e->test2)] = '\n';
+		ft_join(e->test2, e);
 	}
 	write(e->fd, "il est la9\n", 11);
 	write(e->fd, e->str, ft_strlen(e->str));
@@ -198,10 +217,12 @@ int		main(void)
 	e.fd = open("./test", O_RDWR);
 //	e.sopx[10048] = 255;
 //	e.sopy[10048] = 255;
-	if (!(e.str = (char *)malloc(sizeof(char) * 20000)))
-		return (-1);
+	ft_memset(e.str, 0, 20000);
+//	if (!(e.str = (char *)malloc(sizeof(char) * 20000)))
+//		return (-1);
 	while (1)
 	{
+		e.count = 0;
 		if (( i = ft_delay(&e)) == 0 || (ft_get_piece(&e, e.str) == -1))
 		{
 			write(e.fd, "no segfault ?\n", 14);
@@ -232,8 +253,10 @@ int		main(void)
 			mlx_hook(e.win, 17, (1L << 17), &red_cross, &e);
 			mlx_loop(e.mlx);
 		}
+		write(e.fd, "il est la5\n", 11);
 		if(e.plateau)
 			e.befor = e.plateau;
+		write(e.fd, "il est la6\n", 11);
 	}
 	return (0);
 }

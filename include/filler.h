@@ -41,8 +41,10 @@ typedef struct	s_env
 	void	*mlx;
 	void	*img;
 	char	**plateau;
-	char	*str;
+	char	str[20000];
+	char test2[500];
 	char	**tmp;
+	int 	count;
 	int		fd;
 	char	**map2;
 	char	**tmp2;
