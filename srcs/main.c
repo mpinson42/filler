@@ -54,7 +54,8 @@ int		key_pressed(int kc, t_env *e)
 	lol = 0;
 	if (kc == 36)
 	{
-		while (e->plateau[lol])
+		ft_putstr_fd("coucou\n", e->fd);
+		while (e->plateau && e->plateau[lol])
 		{
 			ft_strdel(&e->plateau[lol]);
 			lol++;
@@ -68,8 +69,6 @@ int		key_pressed(int kc, t_env *e)
 //		}
 //		free(e->befor);
 		free(e->str);
-		free(e->x);
-		free(e->y);
 		ft_putstr("5 5\n");
 	}
 	return (0);
@@ -94,8 +93,6 @@ int red_cross(t_env *e)
 //	}
 //	free(e->befor);
 	free(e->str);
-	free(e->x);
-	free(e->y);
 	ft_putstr("5 5\n");
 	return(0);
 }
@@ -108,7 +105,7 @@ int		ft_delay(t_env *e)
 //	static int	map = 3;
 	e->nb_map = 0;
 	e->plateau = NULL;
-	ft_memset(e->str, 0, 1000);
+	ft_bzero(e->str, 20000);
 	lol = 0;
 /*	while (lol < (int)(110000000 * 0.8) && map == 3)
 		lol++;
@@ -118,6 +115,7 @@ int		ft_delay(t_env *e)
 		lol++;*/
 //	if (read(0, e->str, 161910) == -1)
 //		return (0);
+//	e->save = e->plateau;
 	while((lol = get_next_line(0, &tmp)) >= 1)
 	{
 //		ft_putstr_fd(tmp, fd);
@@ -142,9 +140,13 @@ int		ft_delay(t_env *e)
 		tmp = ft_strjoin(tmp, ft_strdup("\n"));
 		e->str = ft_strjoin(e->str, tmp);
 	}
+	write(e->fd, "il est la9\n", 11);
 	write(e->fd, e->str, ft_strlen(e->str));
-	write(e->fd, "\n\n\n", 3);
-
+	write(e->fd, "\n\n\n-->", 6);
+	write(e->fd, ft_itoa_base(e->str[2], 10), 3);
+	write(e->fd, "il est la9\n", 11);
+	if(e->str[0] == 0)
+		return(0);
 
 	if (lol == -1 || !(e->plateau = ft_get_plateau(e->str, e)))
 		return (0);
@@ -182,40 +184,11 @@ int	checkx(char **tableau, t_env *e)
 	return(1);
 }
 
-int ft_fin(char **str, t_env *e)
-{
-	int X;
-	int O;
-	int i;
-	int j;
-
-	i = 0;
-	j = 0;
-	X = 0;
-	O = 0;
-	(void)e;
-	while(str[i] != NULL)
-	{
-		j = 0;
-		while(str[i][j])
-		{
-			if(str[i][j] == 'x')
-				X++;
-			if(str[i][j] == 'o')
-				O++;
-			j++;
-		}
-		i++;
-	}
-	if(X < O && checkx(str, e))
-		return(1);
-	return(0);
-}
 
 int		main(void)
 {
 	t_env		e;
-	//int i;
+	int i;
 	static int	truc = 0;
 
 	e.befor = NULL;
@@ -225,17 +198,30 @@ int		main(void)
 	e.fd = open("./test", O_RDWR);
 //	e.sopx[10048] = 255;
 //	e.sopy[10048] = 255;
-	if (!(e.str = (char *)malloc(sizeof(char) * 10000)))
+	if (!(e.str = (char *)malloc(sizeof(char) * 20000)))
 		return (-1);
 	while (1)
 	{
-		if ((ft_delay(&e) == 0) || (ft_get_piece(&e, e.str) == -1))
-			return (0);
-//		write(e.fd, "nosegfault--", 13);
+		if (( i = ft_delay(&e)) == 0 || (ft_get_piece(&e, e.str) == -1))
+		{
+			write(e.fd, "no segfault ?\n", 14);
+		//	ft_putstr("5 5\n");
+		//	exit(0);
+			if (!(e.mlx = mlx_init()))
+				return (0);
+			if (!(e.win = mlx_new_window(e.mlx, 2560, 1440, "filler")))
+				return (0);
+			write(e.fd, "no segfault ?\n", 14);
+			truc == 0 ? ft_affichage(e, e.befor, &truc) : 0;
+			mlx_hook(e.win, 2, 1L << 0, &key_pressed, &e);
+			mlx_hook(e.win, 17, (1L << 17), &red_cross, &e);
+			mlx_loop(e.mlx);
+		}
+		write(e.fd, "nosegfault--\n", 13);
 		if (ft_check(e.plateau, &e) == 0)
 		{
 			ft_putstr("5 5\n");
-//			write(e.fd, "no segfault ?", 12);
+			write(e.fd, "no segfault ?\n", 14);
 		//	exit(0);
 			if (!(e.mlx = mlx_init()))
 				return (0);
@@ -246,7 +232,8 @@ int		main(void)
 			mlx_hook(e.win, 17, (1L << 17), &red_cross, &e);
 			mlx_loop(e.mlx);
 		}
-		e.befor = e.plateau;
+		if(e.plateau)
+			e.befor = e.plateau;
 	}
 	return (0);
 }

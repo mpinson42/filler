@@ -92,8 +92,10 @@ void	ft_affichage(t_env e, char **plateau, int *truc)
 	int			j;
 
 	i = -1;
-	while (plateau[++i] != NULL)
+	write(e.fd, "no segfault 2\n", 14);
+	while (plateau && plateau[++i] != NULL)
 	{
+		write(e.fd, "no segfault 3\n", 14);
 		j = -1;
 		while (plateau[i][++j] != 0)
 		{
@@ -103,6 +105,9 @@ void	ft_affichage(t_env e, char **plateau, int *truc)
 				ft_draw_red(e, i, j, plateau);
 		}
 	}
-	ft_draw_grille(e, plateau);
+	write(e.fd, "no segfault 4\n", 14);
+	if(plateau)
+		ft_draw_grille(e, plateau);
 	truc[0] = 0;
+	write(e.fd, "no segfault 5\n", 14);
 }

@@ -24,8 +24,8 @@
 
 typedef struct	s_env
 {
-	int		*y;
-	int		*x;
+	int		y[10000];
+	int		x[10000];
 	int		co_1erx;
 	int		co_1ery;
 	int		taille;
@@ -46,10 +46,12 @@ typedef struct	s_env
 	int		fd;
 	char	**map2;
 	char	**tmp2;
+	char 	**draw;
 	int 	test;
 	int 	nb_map;
 }				t_env;
 
+char **ft_bnull(char **s, size_t n);
 void			ft_affichage(t_env e, char **plateau, int *truc);
 int				ft_check(char **plateau, t_env *e);
 int				ft_strlen_tab(char **tab);

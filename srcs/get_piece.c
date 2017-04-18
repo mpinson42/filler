@@ -6,11 +6,24 @@
 /*   By: mpinson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/02 13:30:10 by mpinson           #+#    #+#             */
-/*   Updated: 2017/04/02 13:30:11 by mpinson          ###   ########.fr       */
+/*   Updated: 2017/04/17 14:49:35 by mpinson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
+
+char **ft_bnull(char **s, size_t n)
+{
+	size_t			b;
+
+	b = 0;
+	while (b < n)
+	{
+		s[b] = NULL;
+		b++;
+	}
+	return (s);
+}
 
 char	**get_plat_piece(char *str, int *count)
 {
@@ -72,14 +85,8 @@ int		ft_get_piece(t_env *e, char *str)
 
 	bol = 0;
 	e->tmp = get_plat_piece(str, &count);
-//	if(e->x)
-//		free(e->x);
-	if (!(e->x = (int *)malloc(sizeof(int) * (count))))
-		return (-1);
-//	if(e->y)
-//		free(e->y);
-	if (!(e->y = (int *)malloc(sizeof(int) * (count))))
-		return (-1);
+	ft_bzero(e->x, 10000);
+	ft_bzero(e->y, 10000);
 	i = -1;
 	while (e->tmp[++i] != NULL)
 	{
@@ -89,7 +96,16 @@ int		ft_get_piece(t_env *e, char *str)
 		while (e->tmp[i][++y] != 0)
 			retest(e, i, y, &bol);
 	}
-	e->tmp[i] = NULL;
+	if(e->tmp)
+	{	i = 0;
+		while(e->tmp[i + 1])
+		{
+			free(e->tmp[i]);
+			i++;
+		}
+		free(e->tmp);
+	}
+	//e->tmp[i] = NULL;
 	e->taille = count;
 	e->sop_size = 0;
 	e->bol = 0;
