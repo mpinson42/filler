@@ -12,7 +12,89 @@
 
 #include "filler.h"
 //************************************************************************************//
+#include "libft.h"
 
+static void intmax(t_env *e)
+{
+	e->chiffre1[0] = '-';
+	e->chiffre1[1] = 2 + 48;
+	e->chiffre1[2] = 1 + 48;
+	e->chiffre1[3] = 4 + 48;
+	e->chiffre1[4] = 7 + 48;
+	e->chiffre1[5] = 4 + 48;
+	e->chiffre1[6] = 8 + 48;
+	e->chiffre1[7] = 3 + 48;
+	e->chiffre1[8] = 6 + 48;
+	e->chiffre1[9] = 4 + 48;
+	e->chiffre1[10] = 8 + 48;
+	e->chiffre1[11] = '\0';;
+}
+
+static void zero(t_env *e)
+{
+	e->chiffre1[0] = '0';
+	e->chiffre1[1] = '\0';
+}
+
+static void other(int i, size_t n, int neg, t_env *e)
+{
+	if (neg == 0)
+	{
+
+		e->chiffre1[0] = '-';
+		e->chiffre1[i + 1] = '\0';
+		while (i > 0)
+		{
+			e->chiffre1[i] = n % 10 + 48;
+			n = n / 10;
+			i--;
+		}
+	}
+	else
+	{
+
+		e->chiffre1[i] = '\0';
+		while (i >= 0)
+		{
+			e->chiffre1[i-- - 1] = n % 10 + 48;
+			n = n / 10;
+		}
+	}
+}
+
+void		ft_itoa_stack(int n, t_env *e)
+{
+	int		i;
+	int		len;
+	int		neg;
+	char	*str;
+
+	neg = 1;
+	len = n;
+	i = 0;
+	str = NULL;
+	if (n < 0)
+	{
+		neg = 0;
+		n = -n;
+	}
+	if (n == 0)
+	{
+		zero(e);
+		return ;
+	}
+	if (n == -2147483648)
+	{
+		intmax(e);
+		return ;
+	}
+	while (len != 0)
+	{
+		len = len / 10;
+		i++;
+	}
+	other(i, n, neg, e);
+}
  //************************************************************************************
 int	ft_strlen_tab(char **tab)
 {
@@ -51,7 +133,7 @@ int	ft_sop_chr(t_env *e)
 	return (save2);
 }
 
-void ft_join_str(char *str1, char *str2)
+void ft_join_str(t_env *e)
 {
 	char rendu[50];
 	int i;
@@ -60,23 +142,36 @@ void ft_join_str(char *str1, char *str2)
 	j = 0;
 	i = 0;
 	ft_bzero(rendu, 50);
-	while(str1[i])
+	while(e->chiffre2[i])
 	{
-		rendu[i] = str1[i];
+		rendu[i] = e->chiffre2[i];
 		i++;
 	}
 	rendu[i] = ' ';
 	i++;
-	while(str2[j])
+	while(e->chiffre1[j])
 	{
-		rendu[i] = str2[j];
+		rendu[i] = e->chiffre1[j];
 		j++;
 		i++;
 	}
 	rendu[i] = '\n';
-	free(str1);
-	free(str2);
+//	free(str1);
+//	free(str2);
 	ft_putstr(rendu);
+}
+
+void	ft_last_cpy(t_env *e)
+{
+	int i;
+
+	i = 0;
+	while(e->chiffre1[i])
+	{
+		e->chiffre2[i] = e->chiffre1[i];
+		i++;
+	}
+	e->chiffre2[i] = 0;
 }
 
 int	ft_check(char **plateau, t_env *e)
@@ -115,8 +210,11 @@ int	ft_check(char **plateau, t_env *e)
 	test = e->sopx[y] - e->co_1erx;
 	write(e->fd, "il est la-\n", 11);
 
+	ft_itoa_stack(e->sopx[y] - e->co_1erx, e);
+	ft_last_cpy(e);
+	ft_itoa_stack(e->sopy[y] - e->co_1ery, e);
 
-	ft_join_str(ft_itoa(e->sopx[y] - e->co_1erx), ft_itoa(e->sopy[y] - e->co_1ery));
+	ft_join_str(e);
 //while(1)
 //		;
 /*	str = ft_strjoin(ft_itoa_base(e->sopx[y] - e->co_1erx, 10), " ");

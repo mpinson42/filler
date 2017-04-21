@@ -60,15 +60,16 @@ int		key_pressed(int kc, t_env *e)
 	int lol;
 
 	lol = 0;
+	(void)e;
 	if (kc == 36)
 	{
-		ft_putstr_fd("coucou\n", e->fd);
+		/*ft_putstr_fd("coucou\n", e->fd);
 		while (e->plateau && e->plateau[lol])
 		{
 			ft_strdel(&e->plateau[lol]);
 			lol++;
-		}
-		free(e->plateau);
+		}*/
+//		free(e->plateau);
 //		lol = 0;
 //		while (e->befor[lol])
 //		{
@@ -77,8 +78,6 @@ int		key_pressed(int kc, t_env *e)
 //		}
 //		free(e->befor);
 //		free(e->str);
-		while(1)
-			;
 		ft_putstr("5 5\n");
 	}
 	return (0);
@@ -89,12 +88,13 @@ int red_cross(t_env *e)
 	int lol;
 
 	lol = 0;
-	while (e->plateau[lol])
+	(void)e;
+/*	while (e->plateau[lol])
 	{
 		ft_strdel(&e->plateau[lol]);
 		lol++;
 	}
-	free(e->plateau);
+	free(e->plateau);*/
 //	lol = 0;
 //	while (e->befor[lol])
 //	{
@@ -102,7 +102,7 @@ int red_cross(t_env *e)
 //		lol++;
 //	}
 //	free(e->befor);
-	free(e->str);
+//	free(e->str);
 	ft_putstr("5 5\n");
 	return(0);
 }

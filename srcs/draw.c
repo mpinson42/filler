@@ -70,7 +70,7 @@ void	ft_draw_grille(t_env e, char **plateau)
 
 	(void)plateau;
 	y = 1000 / ((int)ft_strlen(e.map2[0] + 2));
-	x = 1000 / e.leng_map + 2;
+	x = 1000 / (e.leng_map + 2);
 	lx = x;
 	ly = y;
 	while (lx < x * ((int)ft_strlen(e.map2[0]) + 1))
