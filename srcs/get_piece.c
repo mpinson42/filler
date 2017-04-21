@@ -25,9 +25,52 @@ char **ft_bnull(char **s, size_t n)
 	return (s);
 }
 
-char	**get_plat_piece(char *str, int *count)
+void ft_strsplit_stack2(t_env *e, char *str, char c)
 {
-	char	**tmp;
+	int x;
+	int y;
+	int i;
+
+	x = 0;
+	y = 0;
+	i = 0;
+	while(str[i] && i < 2000)
+	{
+		e->tmp[x][y] = str[i];
+		i++;
+		y++;
+		if(str[i] == c)
+		{
+			e->tmp[x][y] = 0;
+			i++;
+			y = 0;
+			x++;
+		}
+	}
+	e->tmp[x][y] = 0;
+}
+
+void ft_strsub_stack2(char *str, int start, int leng, t_env *e)
+{
+	int i;
+	char str2[20000];
+
+	i = 0;
+	(void)e;
+	//ft_strcpy(str2, str);
+	ft_bzero(str2, 20000);
+	while(str[i] && i < leng)
+	{
+		str2[i] = str[start];
+		i++;
+		start++;
+	}
+	ft_strcpy(str, str2);
+}
+
+void get_plat_piece(char *str, int *count, t_env *e)
+{
+	//char	**tmp;
 	int		i;
 	int		first;
 	int		segond;
@@ -42,8 +85,8 @@ char	**get_plat_piece(char *str, int *count)
 	i = 0;
 	while (str[i] && str[i] != '.' && str[i] != '*')
 		i++;
-	str = ft_strsub(str, i, first * (segond + 1));
-	tmp = ft_strsplit(str, '\n');
+	ft_strsub_stack2(str, i, first * (segond + 1), e);
+	ft_strsplit_stack2(e ,str, '\n');
 	i = -1;
 	while (str[++i])
 	{
@@ -51,7 +94,7 @@ char	**get_plat_piece(char *str, int *count)
 			count[0]++;
 	}
 	count[0] = count[0] - 1;
-	return (tmp);
+	//return (tmp);
 }
 
 int		retest(t_env *e, int i, int y, int *bol)
@@ -84,19 +127,18 @@ int		ft_get_piece(t_env *e, char *str)
 	int	count;
 
 	bol = 0;
-	e->tmp = get_plat_piece(str, &count);
+	get_plat_piece(str, &count, e);
 	ft_bzero(e->x, 10000);
 	ft_bzero(e->y, 10000);
 	i = -1;
-	while (e->tmp[++i] != NULL)
+	while (e->tmp[++i][0])
 	{
-		ft_putstr_fd(e->tmp[i], e->fd);
-		ft_putstr_fd("\n", e->fd);
 		y = -1;
 		while (e->tmp[i][++y] != 0)
 			retest(e, i, y, &bol);
 	}
-	if(e->tmp)
+	ft_putstr_fd("coucou\n", e->fd);
+/*	if(e->tmp)
 	{	i = 0;
 		while(e->tmp[i + 1])
 		{
@@ -104,7 +146,7 @@ int		ft_get_piece(t_env *e, char *str)
 			i++;
 		}
 		free(e->tmp);
-	}
+	}*/
 	//e->tmp[i] = NULL;
 	e->taille = count;
 	e->sop_size = 0;

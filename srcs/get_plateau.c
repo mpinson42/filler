@@ -19,37 +19,40 @@ int		ft_plat_plat(t_env *e, char *str, int *y, int *x)
 
 	i = 8;
 	if (bol == 0)
-		e->joueur = ft_atoi(ft_strsub(str, 10, 1));
+		e->joueur = ft_atoi(&str[10]);
 	str = ft_strstr(str, "Plateau ");
 	x[0] = ft_atoi(&str[8]);
 	while (str[i] && ft_isdigit(str[i]))
 		i++;
 	y[0] = ft_atoi(&str[i]);
-//	if(e->map2)
-//	{	i = 0;
-//		while(e->map2[i + 1])
-//		{
-//			free(e->map2[i]);
-//			i++;
-//		}
-//		free(e->map2);
-//	}
-	if (!(e->map2 = (char **)malloc(sizeof(char *) * (x[0] + 1))))
-		return (-1);
+/*	if(e->map2)
+	{	i = 0;
+		while(e->map2[i + 1])
+		{
+			free(e->map2[i]);
+			i++;
+		}
+		free(e->map2);
+		e->map2 = NULL;
+	}*/
+//	if (!(e->map2 = (char **)malloc(sizeof(char *) * (x[0] + 1))))
+//		return (-1);
 	i = -1;
 //	while (++i < x[0] + 1)
 //		e->map2[i] = ft_strdup("");
 	i = -1;
-	while (++i < x[0] + 1)
+	while (++i < 200)
 	{
 	//	write(e->fd, "non\n", 4);
 //		if(e->map2[i])
 //			free(e->map2[i]);
-		if (!(e->map2[i] = (char *)malloc(sizeof(char) * (y[0] + 2))))
-			return (-1);
-		ft_memset(e->map2[i], 0, y[0] + 2);
+//		if (!(e->map2[i] = (char *)malloc(sizeof(char) * (y[0] + 2))))
+//			return (-1);
+		ft_bzero(e->map2[i], y[0] + 2);
 	}
-	e->map2[i] = NULL;
+	e->leng_map = x[0] + 1;
+//	ft_bzero(e->map2[i], 0, y[0] + 2);
+//	e->map2[i] = NULL;
 	bol = 1;
 	return (0);
 }
@@ -68,25 +71,82 @@ void	ft_assigne_plat(t_env *e, int i, int y)
 	}
 }
 
-char	**ft_get_plateau(char *str, t_env *e)
+void ft_strsub_stack(t_env *e, int start, int leng, int pos)
+{
+	int i;
+
+	i = 0;
+	while(e->tmp2[pos] && i < leng)
+	{
+		e->map2[pos][i] = e->tmp2[pos][start];
+		i++;
+		start++;
+	}
+}
+
+void ft_strsplit_stack(t_env *e, char *str, char c)
+{
+	int x;
+	int y;
+	int i;
+
+	x = 0;
+	y = 0;
+	i = 0;
+	while(str[i])
+	{
+		e->tmp2[x][y] = str[i];
+		i++;
+		y++;
+		if(str[i] == c)
+		{
+			i++;
+			y = 0;
+			x++;
+		}
+	}
+}
+
+void ft_strsub_stack3(char *str, int start, int leng, t_env *e)
+{
+	//char test[20000];
+	int x;
+	int y;
+
+	x = 0;
+	y = 0;
+	ft_bzero(e->test3, 20000);
+	while(x < leng)
+	{
+		e->test3[x] = str[start];
+		x++;
+		start++; 
+	}
+}
+
+void	ft_get_plateau(char *str, t_env *e)
 {
 	int			y;
 	int			x;
 	int			i;
 	static int	bol = 0;
+//	char test[20000];
 
-	if (ft_plat_plat(e, str, &y, &x) == -1)
-		return (NULL);
+	ft_plat_plat(e, str, &y, &x);
 	str = ft_strstr(str, "000");
-	e->tmp2 = ft_strsplit(ft_strsub(str, 0, (y + 5) * x), '\n');
+	ft_strsub_stack3(str, 0, (y + 5) * x, e);
+	ft_strsplit_stack(e , e->test3, '\n');
+//	if(e->tmp2 == NULL)
+//		return(NULL);
 	i = -1;
-	while (e->tmp2[++i])
+	while (e->tmp2[++i][0])
 	{
-		e->map2[i] = ft_strsub(e->tmp2[i], 4, ft_strlen(e->tmp2[i]));
+		ft_strsub_stack(e, 4, ft_strlen(e->tmp2[i]), i);
 		y = -1;
 		while (e->map2[i][++y] && bol == 0)
 			ft_assigne_plat(e, i, y);
 	}
+	ft_putstr_fd("\ntest\n", e->fd);
 	bol = 1;
-	return (e->map2);
+//	return (e->map2);
 }
