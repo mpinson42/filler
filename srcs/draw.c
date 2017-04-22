@@ -6,20 +6,19 @@
 /*   By: mpinson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/02 13:29:54 by mpinson           #+#    #+#             */
-/*   Updated: 2017/04/02 13:29:57 by mpinson          ###   ########.fr       */
+/*   Updated: 2017/04/22 10:42:45 by mpinson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 
-void	ft_draw_red(t_env e, int i, int j, char **plateau)
+void	ft_draw_red(t_env e, int i, int j)
 {
 	int	x;
 	int	y;
 	int	largeur;
 	int	grandeur;
 
-	(void)plateau;
 	y = 1000 / (ft_strlen(e.map2[0] + 2));
 	x = 1000 / (e.leng_map + 2);
 	largeur = y * i;
@@ -36,14 +35,13 @@ void	ft_draw_red(t_env e, int i, int j, char **plateau)
 	}
 }
 
-void	ft_draw_blue(t_env e, int i, int j, char **plateau)
+void	ft_draw_blue(t_env e, int i, int j)
 {
 	int x;
 	int y;
 	int largeur;
 	int grandeur;
 
-	(void)plateau;
 	y = 1000 / (ft_strlen(e.map2[0] + 2));
 	x = 1000 / (e.leng_map + 2);
 	largeur = y * i;
@@ -60,7 +58,7 @@ void	ft_draw_blue(t_env e, int i, int j, char **plateau)
 	}
 }
 
-void	ft_draw_grille(t_env e, char **plateau)
+void	ft_draw_grille(t_env e)
 {
 	int	x;
 	int	y;
@@ -68,7 +66,6 @@ void	ft_draw_grille(t_env e, char **plateau)
 	int	ly;
 	int	draw;
 
-	(void)plateau;
 	y = 1000 / ((int)ft_strlen(e.map2[0] + 2));
 	x = 1000 / (e.leng_map + 2);
 	lx = x;
@@ -89,29 +86,23 @@ void	ft_draw_grille(t_env e, char **plateau)
 	}
 }
 
-void	ft_affichage(t_env e, char **plateau, int *truc)
+void	ft_affichage(t_env e, int *truc)
 {
 	uintmax_t	i;
 	int			j;
 
 	i = -1;
-	(void)plateau;
-	write(e.fd, "no segfault 2\n", 14);
 	while (++i < (uintmax_t)e.leng_map)
 	{
-		write(e.fd, "no segfault 3\n", 14);
 		j = -1;
 		while (e.map2[i][++j] != 0)
 		{
 			if (e.map2[i][j] == 'X')
-				ft_draw_blue(e, i, j, plateau);
+				ft_draw_blue(e, i, j);
 			if (e.map2[i][j] == 'O')
-				ft_draw_red(e, i, j, plateau);
+				ft_draw_red(e, i, j);
 		}
 	}
-	write(e.fd, "no segfault 4\n", 14);
-	//if(plateau)
-		ft_draw_grille(e, plateau);
+	ft_draw_grille(e);
 	truc[0] = 0;
-	write(e.fd, "no segfault 5\n", 14);
 }

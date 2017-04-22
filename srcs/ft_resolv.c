@@ -6,15 +6,13 @@
 /*   By: mpinson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/01 22:54:22 by mpinson           #+#    #+#             */
-/*   Updated: 2017/04/02 13:30:04 by mpinson          ###   ########.fr       */
+/*   Updated: 2017/04/22 10:44:32 by mpinson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
-//************************************************************************************//
-#include "libft.h"
 
-static void intmax(t_env *e)
+static void	intmax(t_env *e)
 {
 	e->chiffre1[0] = '-';
 	e->chiffre1[1] = 2 + 48;
@@ -27,20 +25,19 @@ static void intmax(t_env *e)
 	e->chiffre1[8] = 6 + 48;
 	e->chiffre1[9] = 4 + 48;
 	e->chiffre1[10] = 8 + 48;
-	e->chiffre1[11] = '\0';;
+	e->chiffre1[11] = '\0';
 }
 
-static void zero(t_env *e)
+static void	zero(t_env *e)
 {
 	e->chiffre1[0] = '0';
 	e->chiffre1[1] = '\0';
 }
 
-static void other(int i, size_t n, int neg, t_env *e)
+static void	other(int i, size_t n, int neg, t_env *e)
 {
 	if (neg == 0)
 	{
-
 		e->chiffre1[0] = '-';
 		e->chiffre1[i + 1] = '\0';
 		while (i > 0)
@@ -52,7 +49,6 @@ static void other(int i, size_t n, int neg, t_env *e)
 	}
 	else
 	{
-
 		e->chiffre1[i] = '\0';
 		while (i >= 0)
 		{
@@ -73,21 +69,14 @@ void		ft_itoa_stack(int n, t_env *e)
 	len = n;
 	i = 0;
 	str = NULL;
-	if (n < 0)
-	{
-		neg = 0;
-		n = -n;
-	}
+	n < 0 ? neg = 0 : 0;
+	n < 0 ? n = -n : 0;
+	n == 0 ? zero(e) : 0;
 	if (n == 0)
-	{
-		zero(e);
 		return ;
-	}
+	n == -2147483648 ? intmax(e) : 0;
 	if (n == -2147483648)
-	{
-		intmax(e);
 		return ;
-	}
 	while (len != 0)
 	{
 		len = len / 10;
@@ -95,8 +84,8 @@ void		ft_itoa_stack(int n, t_env *e)
 	}
 	other(i, n, neg, e);
 }
- //************************************************************************************
-int	ft_strlen_tab(char **tab)
+
+int			ft_strlen_tab(char **tab)
 {
 	int	i;
 
@@ -108,7 +97,7 @@ int	ft_strlen_tab(char **tab)
 	return (i);
 }
 
-int	ft_sop_chr(t_env *e)
+int			ft_sop_chr(t_env *e)
 {
 	int	i;
 	int	ciblex;
@@ -133,40 +122,38 @@ int	ft_sop_chr(t_env *e)
 	return (save2);
 }
 
-void ft_join_str(t_env *e)
+void		ft_join_str(t_env *e)
 {
-	char rendu[50];
-	int i;
-	int j;
+	char	rendu[50];
+	int		i;
+	int		j;
 
 	j = 0;
 	i = 0;
 	ft_bzero(rendu, 50);
-	while(e->chiffre2[i])
+	while (e->chiffre2[i])
 	{
 		rendu[i] = e->chiffre2[i];
 		i++;
 	}
 	rendu[i] = ' ';
 	i++;
-	while(e->chiffre1[j])
+	while (e->chiffre1[j])
 	{
 		rendu[i] = e->chiffre1[j];
 		j++;
 		i++;
 	}
 	rendu[i] = '\n';
-//	free(str1);
-//	free(str2);
 	ft_putstr(rendu);
 }
 
-void	ft_last_cpy(t_env *e)
+void		ft_last_cpy(t_env *e)
 {
 	int i;
 
 	i = 0;
-	while(e->chiffre1[i])
+	while (e->chiffre1[i])
 	{
 		e->chiffre2[i] = e->chiffre1[i];
 		i++;
@@ -174,54 +161,29 @@ void	ft_last_cpy(t_env *e)
 	e->chiffre2[i] = 0;
 }
 
-int	ft_check(char **plateau, t_env *e)
+int			ft_check(t_env *e)
 {
-	int		x;
-	int		y;
-//	char	*str;
-//	char	*str2;
+	int	x;
+	int	y;
 	int test;
 
 	test = 0;
 	x = -1;
-	write(e->fd, "nosegfault--befor\n", 18);
 	while (e->map2[++x][0])
 	{
 		y = -1;
 		while (e->map2[x][++y] != 0)
-		{
-			if (e->joueur == 2 && ft_check_placex(plateau, e, x, y) == 0)
+			if ((e->joueur == 2 && ft_check_placex(e, x, y) == 0)
+				|| (e->joueur == 1 && ft_check_placeo(e, x, y) == 0))
 				return (1);
-			if (e->joueur == 1 && ft_check_placeo(plateau, e, x, y) == 0)
-				return (1);
-		}
 	}
-	write(e->fd, "nosegfault--befor-befor\n", 24);
 	if (e->sop_size <= 0 || (e->sopx[0] <= 0 && e->sopy[0] <= 0))
 		return (0);
-	write(e->fd, "nosegfault--befor-befor-befor\n", 30);
 	y = ft_sop_chr(e);
-
-	write(e->fd, "il est la\n", 10);
-//	write(e->fd, ft_itoa(y), ft_strlen(ft_itoa(y)));
-//	write(e->fd, "\n", 1);
-//	write(e->fd, ft_itoa(y), 5);
-	write(e->fd, "\n", 1);
 	test = e->sopx[y] - e->co_1erx;
-	write(e->fd, "il est la-\n", 11);
-
 	ft_itoa_stack(e->sopx[y] - e->co_1erx, e);
 	ft_last_cpy(e);
 	ft_itoa_stack(e->sopy[y] - e->co_1ery, e);
-
 	ft_join_str(e);
-//while(1)
-//		;
-/*	str = ft_strjoin(ft_itoa_base(e->sopx[y] - e->co_1erx, 10), " ");
-	write(e->fd, "il est la2\n", 11);
-	str2 = ft_strjoin(ft_itoa_base(e->sopy[y] - e->co_1ery, 10), "\n");
-	write(e->fd, "il est la3\n", 11);
-	ft_putstr(ft_strjoin(str, str2));
-	write(e->fd, "il est la4\n", 11);*/
 	return (1);
 }

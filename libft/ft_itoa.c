@@ -69,15 +69,13 @@ static char	*other(char *str, int i, size_t n, int neg)
 	return (str);
 }
 
-char		*ft_itoa(int m)
+char		*ft_itoa(int n)
 {
 	int		i;
 	int		len;
 	int		neg;
 	char	*str;
-	int n;
 
-	n = m;
 	neg = 1;
 	len = n;
 	i = 0;

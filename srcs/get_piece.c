@@ -6,13 +6,13 @@
 /*   By: mpinson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/02 13:30:10 by mpinson           #+#    #+#             */
-/*   Updated: 2017/04/17 14:49:35 by mpinson          ###   ########.fr       */
+/*   Updated: 2017/04/22 10:51:09 by mpinson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 
-char **ft_bnull(char **s, size_t n)
+char	**ft_bnull(char **s, size_t n)
 {
 	size_t			b;
 
@@ -25,7 +25,7 @@ char **ft_bnull(char **s, size_t n)
 	return (s);
 }
 
-void ft_strsplit_stack2(t_env *e, char *str, char c)
+void	ft_strsplit_stack2(t_env *e, char *str, char c)
 {
 	int x;
 	int y;
@@ -34,12 +34,12 @@ void ft_strsplit_stack2(t_env *e, char *str, char c)
 	x = 0;
 	y = 0;
 	i = 0;
-	while(str[i] && i < 2000)
+	while (str[i] && i < 2000)
 	{
 		e->tmp[x][y] = str[i];
 		i++;
 		y++;
-		if(str[i] == c)
+		if (str[i] == c)
 		{
 			e->tmp[x][y] = 0;
 			i++;
@@ -50,16 +50,15 @@ void ft_strsplit_stack2(t_env *e, char *str, char c)
 	e->tmp[x][y] = 0;
 }
 
-void ft_strsub_stack2(char *str, int start, int leng, t_env *e)
+void	ft_strsub_stack2(char *str, int start, int leng, t_env *e)
 {
-	int i;
-	char str2[20000];
+	int		i;
+	char	str2[20000];
 
 	i = 0;
 	(void)e;
-	//ft_strcpy(str2, str);
 	ft_bzero(str2, 20000);
-	while(str[i] && i < leng)
+	while (str[i] && i < leng)
 	{
 		str2[i] = str[start];
 		i++;
@@ -68,9 +67,8 @@ void ft_strsub_stack2(char *str, int start, int leng, t_env *e)
 	ft_strcpy(str, str2);
 }
 
-void get_plat_piece(char *str, int *count, t_env *e)
+void	get_plat_piece(char *str, int *count, t_env *e)
 {
-	//char	**tmp;
 	int		i;
 	int		first;
 	int		segond;
@@ -86,7 +84,7 @@ void get_plat_piece(char *str, int *count, t_env *e)
 	while (str[i] && str[i] != '.' && str[i] != '*')
 		i++;
 	ft_strsub_stack2(str, i, first * (segond + 1), e);
-	ft_strsplit_stack2(e ,str, '\n');
+	ft_strsplit_stack2(e, str, '\n');
 	i = -1;
 	while (str[++i])
 	{
@@ -94,7 +92,6 @@ void get_plat_piece(char *str, int *count, t_env *e)
 			count[0]++;
 	}
 	count[0] = count[0] - 1;
-	//return (tmp);
 }
 
 int		retest(t_env *e, int i, int y, int *bol)
@@ -137,17 +134,6 @@ int		ft_get_piece(t_env *e, char *str)
 		while (e->tmp[i][++y] != 0)
 			retest(e, i, y, &bol);
 	}
-	ft_putstr_fd("coucou\n", e->fd);
-/*	if(e->tmp)
-	{	i = 0;
-		while(e->tmp[i + 1])
-		{
-			free(e->tmp[i]);
-			i++;
-		}
-		free(e->tmp);
-	}*/
-	//e->tmp[i] = NULL;
 	e->taille = count;
 	e->sop_size = 0;
 	e->bol = 0;
