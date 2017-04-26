@@ -195,9 +195,14 @@ int		ft_start_draw(t_env *e, int *truc)
 
 	if (((i = ft_delay(e)) == 0) || (ft_get_piece(e, e->str) == -1))
 	{
-		ft_putstr("5 5\n");
-		red_cross(e);
-		(void)truc;
+		if (!(e->mlx = mlx_init()))
+			return (0);
+		if (!(e->win = mlx_new_window(e->mlx, 2560, 1440, "filler")))
+			return (0);
+		truc == 0 ? ft_affichage(e[0], truc) : 0;
+		mlx_hook(e->win, 2, 1L << 0, &key_pressed, &e);
+		mlx_hook(e->win, 17, (1L << 17), &red_cross, &e);
+		mlx_loop(e->mlx);
 	}
 	return (1);
 }
@@ -216,7 +221,14 @@ int		main(void)
 		if (ft_check(&e) == 0)
 		{
 			ft_putstr("5 5\n");
-			red_cross(&e);
+			if (!(e.mlx = mlx_init()))
+				return (0);
+			if (!(e.win = mlx_new_window(e.mlx, 2560, 1440, "filler")))
+				return (0);
+			truc == 0 ? ft_affichage(e, &truc) : 0;
+			mlx_hook(e.win, 2, 1L << 0, &key_pressed, &e);
+			mlx_hook(e.win, 17, (1L << 17), &red_cross, &e);
+			mlx_loop(e.mlx);
 		}
 		ft_copytab(&e);
 	}
